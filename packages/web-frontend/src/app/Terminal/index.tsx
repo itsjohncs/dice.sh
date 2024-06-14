@@ -4,9 +4,11 @@ import {ReactNode, useEffect} from "react";
 import Prompt from "./Prompt";
 
 import styles from "./index.module.css";
+import {RollLogEntry} from "@dice-sh/engine";
+import Contents from "./Contents";
 
 interface Props {
-    children?: ReactNode;
+    entries: RollLogEntry[];
     prompt: string;
     onSubmit: (value: string) => void;
     history: string[];
@@ -17,12 +19,12 @@ export default function Terminal(props: Props) {
         function () {
             window.scrollTo(0, document.body.scrollHeight);
         },
-        [props.children],
+        [props.entries],
     );
 
     return (
         <div className={styles.terminal}>
-            {props.children}
+            <Contents entries={props.entries} prompt={props.prompt} />
             <Prompt
                 prompt={props.prompt}
                 onSubmit={props.onSubmit}

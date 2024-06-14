@@ -42,8 +42,11 @@ export default function SmartTerminal() {
     );
 
     return (
-        <Terminal prompt={prompt} onSubmit={handleSubmit} history={history}>
-            <Contents entries={entries} prompt={prompt} />
-        </Terminal>
+        <Terminal
+            prompt={prompt}
+            onSubmit={handleSubmit}
+            history={history}
+            entries={entries}
+        />
     );
 }
