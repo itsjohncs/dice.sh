@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "skipLibCheck": true,
+        "module": "Node16",
+        "moduleResolution": "Node16",
+        "resolveJsonModule": true,
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        },
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/**/*.ts",
+    ],
+}

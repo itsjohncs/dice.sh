@@ -1,0 +1,16 @@
+{
+    "name": "@dice-sh/cli",
+    "version": "0.1.0",
+    "scripts": {
+        "start": "ts-node ./src/main.ts",
+        "build": "tsc"
+    },
+    "main": "./dist/main.js",
+    "dependencies": {
+        "commander": "^12.1.0"
+    },
+    "devDependencies": {
+        "ts-node": "^10.9.2",
+        "typescript": "^5.4.5"
+    }
+}
