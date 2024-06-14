@@ -2,7 +2,7 @@
 
 import {ReactElement, useCallback, useState} from "react";
 import Terminal from "./Terminal";
-import roll, {RollLogEntry} from "./roll";
+import {roll, RollLogEntry} from "@dice-sh/engine";
 import RollResult from "./Terminal/RollResult";
 import Help from "./Help";
 import {useLocalStorage, useSessionStorage} from "usehooks-ts";

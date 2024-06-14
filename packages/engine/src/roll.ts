@@ -1,4 +1,4 @@
-import {DiceRoll} from "@dice-roller/rpg-dice-roller";
+import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 
 type Roll = {
     type: "roll";
@@ -29,7 +29,7 @@ type ClearScreenCommand = {
 
 export type RollLogEntry = Roll | Error | SimpleInfo;
 
-export default function roll(input: string): RollLogEntry | ClearScreenCommand {
+export function roll(input: string): RollLogEntry | ClearScreenCommand {
     if (input.trim() === "") {
         return {
             type: "error",
