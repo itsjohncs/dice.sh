@@ -46,7 +46,7 @@ export default function Prompt(props: Props) {
     // modifications users make to the history until they submit a command. This
     // matches the behavior of bash.
     const [history, setHistory] = useState<HistoryState>({
-        offset: 0,
+        offset: NewInput,
         // The "new input" is the value we display if the user hasn't navigated
         // the history at all.
         [NewInput]: "",
