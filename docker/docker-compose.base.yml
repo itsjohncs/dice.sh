@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-bookworm
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: example
+
+  web:
+    build:
+      context: ..
+      dockerfile: ./docker/web/Dockerfile
+    restart: always
+    depends_on:
+      - db

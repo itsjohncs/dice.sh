@@ -1,0 +1,4 @@
+services:
+  web:
+    ports:
+      - 16421:3000

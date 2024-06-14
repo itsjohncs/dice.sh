@@ -2,5 +2,9 @@
     "private": true,
     "workspaces": [
         "packages/web-frontend"
-    ]
+    ],
+    "scripts": {
+        "docker-build": "docker-compose -f docker/docker-compose.base.yml build",
+        "docker-dev": "docker-compose -f docker/docker-compose.base.yml -f docker/docker-compose.dev.yml up"
+    }
 }
