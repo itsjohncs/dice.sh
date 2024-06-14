@@ -9,7 +9,7 @@ const font = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-    title: "diceroller.sh",
+    title: "dice.sh",
     description: "Roll dice in the terminal!",
 };
 

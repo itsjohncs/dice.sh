@@ -1,8 +1,8 @@
 export default function Help() {
     return (
         <div>
-            diceroller.sh |{" "}
-            <a href="https://github.com/itsjohncs/diceroller.sh">GitHub</a> |{" "}
+            dice.sh |{" "}
+            <a href="https://github.com/itsjohncs/dice.sh">GitHub</a> |{" "}
             <a href="https://x.com/itsjohncs">@itsjohncs</a>
             <br />
             <br />

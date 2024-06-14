@@ -1,6 +1,6 @@
-# diceroller.sh
+# dice.sh
 
-A simple online console-like dice roller available at [https://diceroller.sh](https://diceroller.sh).
+A simple online console-like dice roller available at [https://dice.sh](https://dice.sh).
 
 ## Roadmap
 
