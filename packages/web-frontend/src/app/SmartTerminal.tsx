@@ -3,9 +3,10 @@
 import {ReactElement, useCallback, useState} from "react";
 import Terminal from "./Terminal";
 import {roll, RollLogEntry} from "@dice-sh/engine";
-import RollResult from "./Terminal/RollResult";
-import Help from "./Help";
+import RollResult from "./Terminal/Contents/RollResult";
+import Help from "./Terminal/Contents/Help";
 import {useLocalStorage, useSessionStorage} from "usehooks-ts";
+import Contents from "./Terminal/Contents";
 
 const prompt = "$ ";
 
@@ -14,13 +15,14 @@ export default function SmartTerminal() {
         "prompt-history",
         [],
     );
-    const [lines, setLines] = useSessionStorage<RollLogEntry[]>("roll-log", [
-        {type: "simple-info", subType: "help"},
-    ]);
+    const [entries, setEntries] = useSessionStorage<RollLogEntry[]>(
+        "roll-log",
+        [{type: "simple-info", subType: "help"}],
+    );
 
     const handleSubmit = useCallback(
         function (value: string) {
-            setLines(function (prev) {
+            setEntries(function (prev) {
                 const entry = roll(value);
                 if (entry.type === "clear") {
                     return [];
@@ -36,39 +38,12 @@ export default function SmartTerminal() {
                 return prev;
             });
         },
-        [setLines, setHistory],
+        [setEntries, setHistory],
     );
-
-    const lineNodes: ReactElement[] = [];
-    for (let idx = 0; idx < lines.length; ++idx) {
-        const line = lines[idx];
-        if (line.input !== undefined) {
-            lineNodes.push(
-                <div key={`${idx}-input`}>
-                    {prompt}
-                    {line.input}
-                </div>,
-            );
-        }
-
-        if (line.type === "roll") {
-            lineNodes.push(
-                <RollResult
-                    key={idx}
-                    rolls={line.result.rolls}
-                    total={line.result.total}
-                />,
-            );
-        } else if (line.type === "error") {
-            lineNodes.push(<div key={idx}>{line.error}</div>);
-        } else if (line.type === "simple-info" && line.subType === "help") {
-            lineNodes.push(<Help key={idx} />);
-        }
-    }
 
     return (
         <Terminal prompt={prompt} onSubmit={handleSubmit} history={history}>
-            {lineNodes}
+            <Contents entries={entries} prompt={prompt} />
         </Terminal>
     );
 }
