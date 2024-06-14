@@ -1,17 +1,19 @@
 {
-    "name": "@dice-sh/cli",
+    "name": "@dice-sh/ws-backend",
+    "private": true,
     "version": "0.1.0",
     "scripts": {
         "start": "vite-node ./src/main.ts",
         "build": "tsc"
     },
     "main": "./dist/main.js",
-    "dependencies": {
-        "commander": "^12.1.0"
-    },
     "devDependencies": {
+        "@types/ws": "^8.5.10",
         "typescript": "^5.4.5",
         "vite-node": "^1.6.0"
     },
-    "type": "module"
+    "type": "module",
+    "dependencies": {
+        "ws": "^8.17.0"
+    }
 }
