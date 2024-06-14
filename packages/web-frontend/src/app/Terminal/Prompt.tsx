@@ -19,6 +19,11 @@ export interface HistoryState {
     [index: number]: string | undefined;
 }
 
+/**
+ * Increments/decrements the history offset.
+ * 
+ * `NewInput` is the bottom of the history (equivalent to `-1`).
+ */
 function addOffset(
     current: typeof NewInput | number,
     delta: 1 | -1,
@@ -37,8 +42,13 @@ function addOffset(
 }
 
 export default function Prompt(props: Props) {
+    // We keep a local copy of the history because we want to remember
+    // modifications users make to the history until they submit a command. This
+    // matches the behavior of bash.
     const [history, setHistory] = useState<HistoryState>({
         offset: 0,
+        // The "new input" is the value we display if the user hasn't navigated
+        // the history at all.
         [NewInput]: "",
     });
 
