@@ -7,7 +7,7 @@ import type {
 import {forwardRef, useCallback, useLayoutEffect, useRef} from "react";
 
 import styles from "./EditableArea.module.css";
-import splitRef from "@/utils/splitRef";
+import splitRef from "#root/utils/splitRef";
 
 interface Props {
     value: string;

@@ -2,7 +2,7 @@
 
 import {KeyboardEvent, useCallback, useRef, useState} from "react";
 
-import useDocumentListener from "@/utils/useDocumentListener";
+import useDocumentListener from "#root/utils/useDocumentListener";
 import EditableArea from "./EditableArea";
 
 const NewInput = Symbol("newInput");
