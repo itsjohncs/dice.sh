@@ -1,5 +1,5 @@
-import parseArgs from "./parseArgs";
-import runShell from "./runShell";
+import parseArgs from "./parseArgs.js";
+import runShell from "./runShell.js";
 
 const program = parseArgs();
 if (program.args.length > 0) {

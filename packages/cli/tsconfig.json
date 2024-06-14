@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
         "skipLibCheck": true,
-        "module": "Node16",
-        "moduleResolution": "Node16",
-        "resolveJsonModule": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "paths": {
             "@/*": [
                 "./src/*"
