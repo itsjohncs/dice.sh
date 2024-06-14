@@ -1,6 +1,6 @@
 "use client";
 
-import {ReactElement, useCallback, useState} from "react";
+import {ReactElement, useCallback, useEffect, useState} from "react";
 import Terminal from "./Terminal";
 import {roll, RollLogEntry} from "@dice-sh/engine";
 import RollResult from "./Terminal/Contents/RollResult";
@@ -10,6 +10,8 @@ import Contents from "./Terminal/Contents";
 
 const prompt = "$ ";
 
+const defaultEntries: RollLogEntry[] = [{type: "simple-info", subType: "help"}];
+
 export default function SmartTerminal() {
     const [history, setHistory] = useLocalStorage<string[]>(
         "prompt-history",
@@ -17,8 +19,14 @@ export default function SmartTerminal() {
     );
     const [entries, setEntries] = useSessionStorage<RollLogEntry[]>(
         "roll-log",
-        [{type: "simple-info", subType: "help"}],
+        defaultEntries,
     );
+
+    // This lets us hydrate correctly despite our use of browser storage
+    const [loading, setLoading] = useState(true);
+    useEffect(function () {
+        setLoading(false);
+    }, []);
 
     const handleSubmit = useCallback(
         function (value: string) {
@@ -46,7 +54,7 @@ export default function SmartTerminal() {
             prompt={prompt}
             onSubmit={handleSubmit}
             history={history}
-            entries={entries}
+            entries={loading ? defaultEntries : entries}
         />
     );
 }
