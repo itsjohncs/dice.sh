@@ -18,17 +18,6 @@ export default function SmartTerminal() {
         {type: "simple-info", subType: "help"},
     ]);
 
-    const getHistoricalInput = useCallback(
-        function (offset: number): string | undefined {
-            if (offset < history.length) {
-                return history[history.length - offset - 1];
-            }
-
-            return undefined;
-        },
-        [history],
-    );
-
     const handleSubmit = useCallback(
         function (value: string) {
             setLines(function (prev) {
@@ -78,11 +67,7 @@ export default function SmartTerminal() {
     }
 
     return (
-        <Terminal
-            prompt={prompt}
-            onSubmit={handleSubmit}
-            getHistoricalInput={getHistoricalInput}
-        >
+        <Terminal prompt={prompt} onSubmit={handleSubmit} history={history}>
             {lineNodes}
         </Terminal>
     );

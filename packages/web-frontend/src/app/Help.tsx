@@ -1,9 +1,8 @@
 export default function Help() {
     return (
         <div>
-            dice.sh |{" "}
-            <a href="https://github.com/itsjohncs/dice.sh">GitHub</a> |{" "}
-            <a href="https://x.com/itsjohncs">@itsjohncs</a>
+            dice.sh | <a href="https://github.com/itsjohncs/dice.sh">GitHub</a>{" "}
+            | <a href="https://x.com/itsjohncs">@itsjohncs</a>
             <br />
             <br />
             Enter dice notation to roll dice. For example:

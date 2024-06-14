@@ -9,7 +9,7 @@ interface Props {
     children?: ReactNode;
     prompt: string;
     onSubmit: (value: string) => void;
-    getHistoricalInput: (offset: number) => string | undefined;
+    history: string[];
 }
 
 export default function Terminal(props: Props) {
@@ -26,7 +26,7 @@ export default function Terminal(props: Props) {
             <Prompt
                 prompt={props.prompt}
                 onSubmit={props.onSubmit}
-                getHistoricalInput={props.getHistoricalInput}
+                history={props.history}
             />
         </div>
     );
