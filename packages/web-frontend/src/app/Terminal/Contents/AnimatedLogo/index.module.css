@@ -7,14 +7,36 @@
 .contents {
     --logo-text-size: 48px;
 
-    display: flex;
+    display: grid;
+    grid-template:
+        "d20 d6" min-content
+        "text text" min-content;
     position: relative;
     aspect-ratio: 10 / 7;
-    align-items: flex-end;
+    align-content: center;
+}
+
+.foreground,
+.d20,
+.d6 {
+    filter: drop-shadow(0 0 3px #7cc439) drop-shadow(0 0 3px #7cc439)
+        drop-shadow(0 0 3px #7cc439) drop-shadow(0 0 3px #7cc439);
 }
 
 .foreground {
+    grid-area: text;
     font-size: var(--logo-text-size);
+}
+
+.d20 {
+    grid-area: d20;
+    justify-self: self-end;
+    align-self: self-end;
+}
+
+.d6 {
+    grid-area: d6;
+    align-self: self-end;
 }
 
 .background {

@@ -14,6 +14,7 @@
     "dependencies": {
         "@dice-roller/rpg-dice-roller": "^5.5.0",
         "@dice-sh/engine": "^0.1.0",
+        "iconoir-react": "^7.7.0",
         "next": "14.2.3",
         "prettier": "^3.2.5",
         "react": "^18",
