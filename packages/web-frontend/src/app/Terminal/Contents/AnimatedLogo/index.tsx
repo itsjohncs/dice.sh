@@ -59,13 +59,13 @@ export default function AnimatedLogo(props: {className?: string}) {
     );
 
     return (
-        <div className={styles.container}>
+        <div className={classNames(styles.container, props.className)}>
             <svg
                 ref={refContainer}
                 version="1.1"
                 viewBox="0 0 86.228 11.413"
                 xmlns="http://www.w3.org/2000/svg"
-                className={classNames(props.className, styles.svg)}
+                className={styles.svg}
                 fill="currentColor"
             >
                 <path d="m6.6379 4.6059-6.6379-4.2333v2.6077l4.2672 2.5739v0.06773l-4.2672 2.5739v2.6077l6.6379-4.2333z" />

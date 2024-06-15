@@ -1,0 +1,37 @@
+.logo {
+    margin-bottom: 1em;
+}
+
+.tip {
+    margin: 1em;
+}
+
+.tip .tipIcon {
+    height: 18px;
+    vertical-align: middle;
+}
+
+.exampleRolls {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1em;
+    margin: 1em;
+}
+
+.exampleRolls dt {
+    font-weight: bold;
+    margin: 0;
+}
+
+.exampleRolls dd {
+    margin: 0;
+}
+
+.container h1 {
+    margin: 1em 0;
+    font-size: inherit;
+}
+
+.container h1::before {
+    content: "# ";
+}
