@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    background-color: #002b36;
+    background-color: #eee8d5;
     border-radius: 8px;
     overflow: hidden;
     padding: 13px 25px;
@@ -14,7 +14,7 @@
 
 .svg {
     height: 20px;
-    color: #839496;
+    color: #657b83;
 }
 
 .svg > path {
