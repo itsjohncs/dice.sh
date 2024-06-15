@@ -1,93 +1,49 @@
 .container {
-    border: 1px solid #d3d3d3;
+    display: flex;
+    background-color: #002b36;
     border-radius: 8px;
     overflow: hidden;
+    padding: 13px 25px;
 }
 
-.contents {
-    --logo-text-size: 48px;
-
-    display: grid;
-    grid-template:
-        "d20 d6" min-content
-        "text text" min-content;
-    position: relative;
-    aspect-ratio: 10 / 7;
-    align-content: center;
+.container:hover .underscore {
+    animation-iteration-count: infinite;
+    animation-play-state: running;
 }
 
-.foreground,
-.d20,
-.d6 {
-    filter: drop-shadow(0 0 3px #7cc439) drop-shadow(0 0 3px #7cc439)
-        drop-shadow(0 0 3px #7cc439) drop-shadow(0 0 3px #7cc439);
+.svg {
+    height: 20px;
+    color: #839496;
 }
 
-.foreground {
-    grid-area: text;
-    font-size: var(--logo-text-size);
+.svg > path {
+    transition: opacity 20ms linear;
 }
 
-.d20 {
-    grid-area: d20;
-    justify-self: self-end;
-    align-self: self-end;
+.underscore {
+    animation: fade-cursor 1.5s 3;
 }
 
-.d6 {
-    grid-area: d6;
-    align-self: self-end;
+.faded {
+    opacity: 0.5;
 }
 
-.background {
-    font-size: calc(var(--logo-text-size) / 4);
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    word-break: break-all;
-    overflow: hidden;
-    color: #ccc;
-    z-index: -1;
+@keyframes fade-cursor {
+    0%,
+    20% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    70%,
+    100% {
+        opacity: 1;
+    }
 }
 
-.bar {
-    display: flex;
-    width: 100%;
-    height: 30px;
-    background-color: #d3d3d3;
-    align-items: center;
-    padding: 0 10px;
-    box-sizing: border-box;
-}
-
-.button {
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    margin-right: 5px;
-    flex-shrink: 0;
-}
-
-.button:nth-child(1) {
-    background-color: #f46f48;
-}
-
-.button:nth-child(2) {
-    background-color: #edaa2d;
-}
-
-.button:nth-child(3) {
-    background-color: #7cc439;
-    margin-right: 10px;
-}
-
-.title {
-    text-align: center;
-    flex-grow: 1;
-    font-size: 14px;
-    color: #333;
-    box-sizing: border-box;
-    user-select: none;
+.hidden {
+    opacity: 0;
 }
