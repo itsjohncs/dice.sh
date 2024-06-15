@@ -4,6 +4,7 @@
     border-radius: 8px;
     overflow: hidden;
     padding: 13px 25px;
+    width: min-content;
 }
 
 .container:hover .underscore {
@@ -20,8 +21,9 @@
     transition: opacity 20ms linear;
 }
 
-.underscore {
-    animation: fade-cursor 1.5s 3;
+.underscore:not(.hidden) {
+    opacity: 0.5;
+    animation: fade-cursor linear 1.2s 3;
 }
 
 .faded {
@@ -29,18 +31,20 @@
 }
 
 @keyframes fade-cursor {
-    0%,
-    20% {
+    0% {
+        opacity: 0.5;
+    }
+
+    10% {
         opacity: 1;
     }
 
-    50% {
+    90% {
         opacity: 0;
     }
 
-    70%,
     100% {
-        opacity: 1;
+        opacity: 0.5;
     }
 }
 

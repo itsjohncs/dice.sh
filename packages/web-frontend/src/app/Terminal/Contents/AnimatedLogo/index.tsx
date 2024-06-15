@@ -58,19 +58,6 @@ export default function AnimatedLogo(props: {className?: string}) {
         [numVisibleCharacters],
     );
 
-    const [underscoreAnimationEnded, setUnderscoreAnimationEnded] =
-        useState(false);
-    const handleUnderscoreAnimationStart = useCallback(function (
-        event: AnimationEvent<SVGPathElement>,
-    ) {
-        setUnderscoreAnimationEnded(false);
-    }, []);
-    const handleUnderscoreAnimationEnd = useCallback(function (
-        event: AnimationEvent<SVGPathElement>,
-    ) {
-        setUnderscoreAnimationEnded(true);
-    }, []);
-
     return (
         <div className={styles.container}>
             <svg
@@ -133,13 +120,11 @@ export default function AnimatedLogo(props: {className?: string}) {
                 />
                 <path
                     className={classNames({
+                        [styles.hidden]: numVisibleCharacters <= 0,
                         [styles.underscore]: true,
-                        [styles.faded]: underscoreAnimationEnded,
                     })}
                     ref={refUnderscore}
                     d="m78.1 9.0762v2.1336h8.128v-2.1336z"
-                    onAnimationEnd={handleUnderscoreAnimationEnd}
-                    onAnimationStart={handleUnderscoreAnimationStart}
                 />
             </svg>
         </div>
