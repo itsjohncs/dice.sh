@@ -8,10 +8,10 @@ export default function Help() {
     return (
         <div className={styles.container}>
             <AnimatedLogo className={styles.logo} />
-            <p>The terminal in your browser that rolls dice.</p>
+            <p>A dice-rolling shell in your browser.</p>
             <div className={styles.tip}>
-                <MagicWand className={styles.tipIcon} /> Want a terminal in your
-                terminal? Try <code>ssh dice.sh</code> or{" "}
+                <MagicWand className={styles.tipIcon} /> Prefer that shells stay
+                in terminals? Try <code>ssh dice.sh</code> or{" "}
                 <code>npx @dice-sh/cli</code>.
             </div>
             <h1>Rolling Dice</h1>
@@ -53,24 +53,24 @@ export default function Help() {
                 <dl className={styles.exampleRolls}>
                     <dt>/join [channel]</dt>
                     <dd>
-                        Joins/creates a channel. If no channel is provided, a
-                        random channel name will be generated.
+                        Join/create a channel. If <code>[channel]</code> is
+                        omitted, a random name will be generated.
                     </dd>
                     <dt>/name {"<name>"}</dt>
                     <dd>Change your display name.</dd>
                     <dt>/leave</dt>
                     <dd>
-                        Leaves the current channel and returns to offline mode.
+                        Leave the current channel and return to offline mode.
                     </dd>
                     <dt>/clear</dt>
-                    <dd>Clears the screen.</dd>
+                    <dd>Clear the screen.</dd>
                     <dt>/help</dt>
                     <dd>Show this message.</dd>
                 </dl>
             </div>
             <h1>Found a Bug?</h1>
             <div>
-                Come help make dice.sh better on{" "}
+                Come make dice.sh better on{" "}
                 <a href="https://github.com/itsjohncs/dice.sh">GitHub</a>!
             </div>
         </div>

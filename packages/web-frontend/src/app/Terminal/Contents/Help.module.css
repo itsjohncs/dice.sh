@@ -27,6 +27,10 @@
     margin: 0;
 }
 
+.container {
+    margin-bottom: 1em;
+}
+
 .container h1 {
     margin: 1em 0;
     font-size: inherit;
