@@ -42,16 +42,10 @@ export default function Prompt(props: Props) {
         [updateHistory],
     );
 
-    const editableAreaRef = useRef<HTMLSpanElement>(null);
-    useDocumentListener("click", function (event) {
-        editableAreaRef.current?.focus();
-    });
-
     return (
         <div className={classNames(styles.container, props.className)}>
             {props.prompt}
             <EditableArea
-                ref={editableAreaRef}
                 value={currentInput}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
