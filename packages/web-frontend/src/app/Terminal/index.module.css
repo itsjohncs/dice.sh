@@ -1,7 +1,6 @@
 .terminal {
     display: flex;
     flex-direction: column;
-    margin: 10px;
     line-height: 1.3;
 }
 

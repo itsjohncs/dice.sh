@@ -6,6 +6,9 @@ import useDocumentListener from "#root/utils/useDocumentListener";
 import EditableArea from "./EditableArea";
 import useHistory from "./useHistory";
 
+import styles from "./index.module.css";
+import classNames from "classnames";
+
 interface Props {
     className?: string;
     prompt: string;
@@ -45,7 +48,7 @@ export default function Prompt(props: Props) {
     });
 
     return (
-        <div className={props.className}>
+        <div className={classNames(styles.container, props.className)}>
             {props.prompt}
             <EditableArea
                 ref={editableAreaRef}

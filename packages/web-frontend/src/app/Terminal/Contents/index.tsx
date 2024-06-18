@@ -3,6 +3,9 @@ import {ReactElement} from "react";
 import RollResult from "./RollResult";
 import Help from "./Help";
 
+import styles from "./index.module.css";
+import classNames from "classnames";
+
 interface Props {
     className?: string;
     prompt: string;
@@ -37,5 +40,9 @@ export default function Contents(props: Props) {
         }
     }
 
-    return <div className={props.className}>{lineNodes}</div>;
+    return (
+        <div className={classNames(props.className, styles.container)}>
+            {lineNodes}
+        </div>
+    );
 }
