@@ -7,6 +7,7 @@ import EditableArea from "./EditableArea";
 import useHistory from "./useHistory";
 
 interface Props {
+    className?: string;
     prompt: string;
     onSubmit: (value: string) => void;
     history: string[];
@@ -44,7 +45,7 @@ export default function Prompt(props: Props) {
     });
 
     return (
-        <div>
+        <div className={props.className}>
             {props.prompt}
             <EditableArea
                 ref={editableAreaRef}

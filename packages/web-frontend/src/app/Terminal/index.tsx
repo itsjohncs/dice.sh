@@ -24,8 +24,13 @@ export default function Terminal(props: Props) {
 
     return (
         <div className={styles.terminal}>
-            <Contents entries={props.entries} prompt={props.prompt} />
+            <Contents
+                className={styles.entries}
+                entries={props.entries}
+                prompt={props.prompt}
+            />
             <Prompt
+                className={styles.prompt}
                 prompt={props.prompt}
                 onSubmit={props.onSubmit}
                 history={props.history}

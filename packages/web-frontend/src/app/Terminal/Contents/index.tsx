@@ -4,6 +4,7 @@ import RollResult from "./RollResult";
 import Help from "./Help";
 
 interface Props {
+    className?: string;
     prompt: string;
     entries: RollLogEntry[];
 }
@@ -36,5 +37,5 @@ export default function Contents(props: Props) {
         }
     }
 
-    return lineNodes;
+    return <div className={props.className}>{lineNodes}</div>;
 }

@@ -1,4 +1,15 @@
 .terminal {
+    display: flex;
+    flex-direction: column;
     margin: 10px;
     line-height: 1.3;
+}
+
+.entries {
+    flex-grow: 1;
+}
+
+.prompt {
+    position: sticky;
+    bottom: 0;
 }
