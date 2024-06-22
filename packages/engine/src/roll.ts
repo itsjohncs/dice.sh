@@ -27,9 +27,38 @@ type ClearScreenCommand = {
     type: "clear";
 };
 
-export type RollLogEntry = Roll | Error | SimpleInfo;
+type JoinCommand = {
+    type: "join";
+    input: string;
+    channel?: string;
+};
 
-export function roll(input: string): RollLogEntry | ClearScreenCommand {
+export type RollLogEntry = Roll | Error | SimpleInfo;
+type Command = JoinCommand | ClearScreenCommand;
+
+function matchJoin(input: string): JoinCommand | Error | undefined {
+    const trimmed = input.trim();
+    if (trimmed.startsWith("/join")) {
+        const match = /^\/join(?: ([^ ]+))?$/.exec(trimmed);
+        if (match) {
+            return {
+                type: "join",
+                input,
+                channel: match[1]
+            };
+        } else {
+            return {
+                type: "error",
+                input,
+                error: "Invalid join command."
+            };
+        }
+    }
+
+    return undefined;
+}
+
+export function roll(input: string): RollLogEntry | Command {
     if (input.trim() === "") {
         return {
             type: "error",
@@ -40,7 +69,10 @@ export function roll(input: string): RollLogEntry | ClearScreenCommand {
 
     const trimmed = input.trim();
     if (trimmed.startsWith("/")) {
-        if (trimmed === "/help") {
+        const join = matchJoin(input);
+        if (join) {
+            return join;
+        } else if (trimmed === "/help") {
             return {
                 type: "simple-info",
                 input,
