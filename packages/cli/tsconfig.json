@@ -4,13 +4,9 @@
         "module": "NodeNext",
         "moduleResolution": "NodeNext",
         "paths": {
-            "@/*": [
-                "./src/*"
-            ]
+            "@/*": ["./src/*"]
         },
         "outDir": "./dist"
     },
-    "include": [
-        "src/**/*.ts",
-    ],
+    "include": ["src/**/*.ts"]
 }
