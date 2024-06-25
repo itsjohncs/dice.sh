@@ -1,4 +1,4 @@
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
+import {DiceRoll} from "@dice-roller/rpg-dice-roller";
 
 type Roll = {
     type: "roll";
@@ -44,13 +44,13 @@ function matchJoin(input: string): JoinCommand | Error | undefined {
             return {
                 type: "join",
                 input,
-                channel: match[1]
+                channel: match[1],
             };
         } else {
             return {
                 type: "error",
                 input,
-                error: "Invalid join command."
+                error: "Invalid join command.",
             };
         }
     }
