@@ -1,0 +1,6 @@
+{
+    "name": "@dice-sh/prettier-config",
+    "version": "1.0.0",
+    "description": "Prettier config for dice.sh repos.",
+    "main": "index.json"
+}
