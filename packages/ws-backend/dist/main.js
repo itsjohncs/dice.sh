@@ -1,4 +1,4 @@
-import { WebSocketServer } from "ws";
+import {WebSocketServer} from "ws";
 function getRoomIdFromPath(pathname) {
     const pathRe = /^\/room\/([A-Za-z0-9-]+)$/.exec(pathname);
     if (pathRe) {
@@ -6,9 +6,9 @@ function getRoomIdFromPath(pathname) {
     }
     return undefined;
 }
-const wss = new WebSocketServer({ port: 45856 });
+const wss = new WebSocketServer({port: 45856});
 wss.on("connection", function connection(ws) {
-    const { pathname } = new URL(ws.url, "wss://ws.dice.sh");
+    const {pathname} = new URL(ws.url, "wss://ws.dice.sh");
     const roomId = getRoomIdFromPath(pathname);
     ws.on("error", console.error);
     ws.on("message", function message(data) {

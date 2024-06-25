@@ -1,4 +1,4 @@
-import { WebSocketServer } from "ws";
+import {WebSocketServer} from "ws";
 
 function getChannelIdFromPath(pathname: string): string | undefined {
     const pathRe = /^\/channel\/([A-Za-z0-9-]+)$/.exec(pathname);
@@ -9,7 +9,7 @@ function getChannelIdFromPath(pathname: string): string | undefined {
     return undefined;
 }
 
-const wss = new WebSocketServer({ port: 45856 });
+const wss = new WebSocketServer({port: 45856});
 
 wss.on("connection", function connection(ws) {
     const {pathname} = new URL(ws.url, "wss://ws.dice.sh");
