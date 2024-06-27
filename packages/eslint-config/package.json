@@ -1,0 +1,20 @@
+{
+    "name": "@dice-sh/eslint-config",
+    "version": "1.0.0",
+    "description": "ESLint config for dice.sh repos.",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "lint": "tsc --noEmit && prettier --list-different .",
+        "prettify": "prettier --write ."
+    },
+    "devDependencies": {
+        "@eslint/compat": "^1.1.0",
+        "@next/eslint-plugin-next": "^14.2.4",
+        "@types/eslint": "^8.56.10",
+        "@vercel/style-guide": "^6.0.0",
+        "prettier": "^3.3.2",
+        "typescript": "^5.5.3"
+    },
+    "prettier": "@dice-sh/prettier-config"
+}
