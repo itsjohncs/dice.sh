@@ -6,7 +6,7 @@
         "dev": "next dev --port 16421",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint && prettier --list-different .",
+        "lint": "tsc --noEmit && eslint && prettier --list-different .",
         "prettify": "prettier --write .",
         "storybook": "storybook dev -p 6006",
         "build-storybook": "storybook build"
