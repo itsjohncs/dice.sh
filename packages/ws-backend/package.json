@@ -5,12 +5,14 @@
     "scripts": {
         "start": "vite-node ./src/main.ts",
         "build": "tsc",
-        "lint": "tsc --noEmit && prettier --list-different .",
+        "lint": "tsc --noEmit && eslint && prettier --list-different .",
         "prettify": "prettier --write ."
     },
     "main": "./dist/main.js",
     "devDependencies": {
+        "@dice-sh/eslint-config": "^1.0.0",
         "@types/ws": "^8.5.10",
+        "eslint": "^9.6.0",
         "prettier": "^3.3.2",
         "typescript": "^5.4.5",
         "vite-node": "^1.6.0"
