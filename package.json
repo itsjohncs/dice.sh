@@ -3,6 +3,8 @@
     "workspaces": ["packages/*"],
     "scripts": {
         "docker-build": "docker-compose -f docker/docker-compose.base.yml build",
-        "docker-dev": "docker-compose -f docker/docker-compose.base.yml -f docker/docker-compose.dev.yml up"
+        "docker-dev": "docker-compose -f docker/docker-compose.base.yml -f docker/docker-compose.dev.yml up",
+        "lint": "npm run lint --workspaces --if-present",
+        "prettify": "npm run prettify --workspaces --if-present"
     }
 }
