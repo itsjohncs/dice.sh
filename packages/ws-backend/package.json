@@ -19,6 +19,7 @@
     },
     "type": "module",
     "dependencies": {
+        "winston": "^3.13.0",
         "ws": "^8.17.0"
     },
     "prettier": "@dice-sh/prettier-config"

@@ -1,4 +1,9 @@
 import {WebSocketServer} from "ws";
+import winston from "winston";
+
+const logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+});
 
 function getChannelIdFromPath(pathname: string): string | undefined {
     const pathRe = /^\/channel\/([A-Za-z0-9-]+)$/.exec(pathname);
@@ -15,12 +20,12 @@ wss.on("connection", function connection(ws) {
     const {pathname} = new URL(ws.url, "wss://ws.dice.sh");
     const channelId = getChannelIdFromPath(pathname);
 
-    ws.on("error", console.error);
+    ws.on("error", logger.error);
 
     ws.on("message", function message(data) {
-        console.log("Got message", data);
+        logger.info("Got message", data);
     });
 
     ws.send(`Joined ${channelId}`);
-    console.log("Joined", channelId);
+    logger.info("Joined", channelId);
 });
