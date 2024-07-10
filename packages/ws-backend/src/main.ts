@@ -1,5 +1,13 @@
 import {WebSocketServer} from "ws";
 import winston from "winston";
+import {z} from "zod";
+
+const BaseRequest = z
+    .object({
+        type: z.string(),
+        data: z.unknown(),
+    })
+    .strict();
 
 const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
@@ -23,7 +31,8 @@ wss.on("connection", function connection(ws) {
     ws.on("error", logger.error);
 
     ws.on("message", function message(data) {
-        logger.info("Got message", data);
+        const request = BaseRequest.parse(data);
+        logger.info("Got request", request);
     });
 
     ws.send(`Joined ${channelId}`);
