@@ -6,14 +6,18 @@
         "start": "vite-node ./src/main.ts",
         "build": "tsc",
         "lint": "tsc --noEmit && eslint && prettier --list-different .",
-        "prettify": "prettier --write ."
+        "prettify": "prettier --write .",
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest"
     },
     "main": "./dist/main.js",
     "devDependencies": {
         "@dice-sh/eslint-config": "^1.0.0",
+        "@jest/globals": "^29.7.0",
         "@types/ws": "^8.5.10",
         "eslint": "^9.6.0",
+        "jest": "^29.7.0",
         "prettier": "^3.3.2",
+        "ts-jest": "^29.2.2",
         "typescript": "^5.4.5",
         "vite-node": "^1.6.0"
     },
