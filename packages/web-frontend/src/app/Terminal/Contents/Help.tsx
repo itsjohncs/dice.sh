@@ -1,3 +1,5 @@
+/* eslint react/no-unescaped-entities: off */
+
 import {Hat, MagicWand, QuoteMessageSolid} from "iconoir-react";
 import AnimatedLogo from "./AnimatedLogo";
 

@@ -39,24 +39,21 @@ export default function AnimatedLogo(props: {className?: string}) {
         numVisibleCharacters < characters.length ? 100 : null,
     );
 
-    useEffect(
-        function () {
-            const underscore = refUnderscore.current;
-            if (!underscore) {
-                return;
-            }
+    useEffect(function () {
+        const underscore = refUnderscore.current;
+        if (!underscore) {
+            return;
+        }
 
-            if (numVisibleCharacters >= characters.length) {
-                underscore.transform.baseVal.clear();
-            } else {
-                const nextInvisible = characters[numVisibleCharacters].current;
-                if (nextInvisible) {
-                    movePathTo(underscore, nextInvisible);
-                }
+        if (numVisibleCharacters >= characters.length) {
+            underscore.transform.baseVal.clear();
+        } else {
+            const nextInvisible = characters[numVisibleCharacters].current;
+            if (nextInvisible) {
+                movePathTo(underscore, nextInvisible);
             }
-        },
-        [numVisibleCharacters],
-    );
+        }
+    });
 
     return (
         <div className={classNames(styles.container, props.className)}>
