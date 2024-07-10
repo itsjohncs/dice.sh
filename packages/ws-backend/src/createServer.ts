@@ -1,53 +1,59 @@
-import {WebSocketServer} from "ws";
 import winston from "winston";
 import {z} from "zod";
+import {Server} from "socket.io";
 
 export interface ServerConfiguration {
     logger: winston.Logger;
     listen: {
-        host: string;
         port: number;
     };
 }
 
-const BaseRequest = z
+const InitializationData = z
     .object({
-        type: z.string(),
-        data: z.unknown(),
+        username: z.string(),
+        clientVersion: z.string(),
+        lastSeenLog: z.number().optional(),
+        channelId: z.string(),
     })
-    .strict();
+    .required();
+type InitializationData = z.infer<typeof InitializationData>;
 
-function getChannelIdFromPath(pathname: string): string | undefined {
-    const pathRe = /^\/channel\/([A-Za-z0-9-]+)$/.exec(pathname);
-    if (pathRe) {
-        return pathRe[1];
-    }
-
-    return undefined;
+interface ClientToServerEvents {
+    initialize: (
+        initializationData: InitializationData,
+        callback: (data: unknown) => void,
+    ) => void;
 }
 
-export default function createServer(
-    config: ServerConfiguration,
-): WebSocketServer {
-    const wss = new WebSocketServer({
-        port: config.listen.port,
-        host: config.listen.host,
-    });
+interface SocketData {
+    channelId: string;
+    username: string;
+    lastSeenLog: number | undefined;
+}
 
-    wss.on("connection", function connection(ws) {
-        const {pathname} = new URL(ws.url, "ws://ws.dice.sh");
-        const channelId = getChannelIdFromPath(pathname);
+export default function createServer(config: ServerConfiguration): Server {
+    const server = new Server<
+        ClientToServerEvents,
+        Record<string, never>,
+        Record<string, never>,
+        SocketData
+    >(config.listen.port);
 
-        ws.on("error", config.logger.error);
+    server.on("connection", function (socket) {
+        socket.on("initialize", function (rawData, callback) {
+            try {
+                const data = InitializationData.parse(rawData);
+                socket.data.channelId = data.channelId;
+                socket.data.lastSeenLog = data.lastSeenLog;
+                socket.data.username = data.username;
 
-        ws.on("message", function message(data) {
-            const request = BaseRequest.parse(data);
-            config.logger.info("Got request", request);
+                callback({error: "no"});
+            } catch {
+                callback({error: "yes"});
+            }
         });
-
-        ws.send(`Joined ${channelId}`);
-        config.logger.info("Joined", channelId);
     });
 
-    return wss;
+    return server;
 }

@@ -23,6 +23,8 @@
     },
     "type": "module",
     "dependencies": {
+        "socket.io": "^4.7.5",
+        "socket.io-client": "^4.7.5",
         "winston": "^3.13.0",
         "ws": "^8.17.0",
         "zod": "^3.23.8"

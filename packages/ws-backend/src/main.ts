@@ -8,7 +8,6 @@ const logger = winston.createLogger({
 createServer({
     logger,
     listen: {
-        host: "127.0.0.1",
         port: 45856,
     },
 });
