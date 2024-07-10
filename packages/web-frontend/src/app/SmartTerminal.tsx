@@ -34,6 +34,8 @@ export default function SmartTerminal() {
                 const entry = roll(value);
                 if (entry.type === "clear") {
                     return [];
+                } else if (entry.type === "join") {
+                    throw new Error("Not implemented.");
                 } else {
                     return [...prev, entry];
                 }
