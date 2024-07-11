@@ -1,9 +1,18 @@
 import {beforeEach, test} from "@jest/globals";
-import {io, Socket} from "socket.io-client";
+import {io, Socket as SocketIOClientSocket} from "socket.io-client";
 import createServer from "./createServer";
 import winston from "winston";
 import assert from "node:assert/strict";
-import {Server} from "socket.io";
+import {
+    ClientToServerEvents,
+    Server,
+    ServerToClientEvents,
+} from "./SocketTypes";
+
+type ClientSocket = SocketIOClientSocket<
+    ServerToClientEvents,
+    ClientToServerEvents
+>;
 
 const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
@@ -20,7 +29,7 @@ beforeEach(function () {
     });
 });
 
-const clients: Socket[] = [];
+const clients: ClientSocket[] = [];
 afterEach(function () {
     for (const client of clients) {
         client.close();
@@ -29,7 +38,7 @@ afterEach(function () {
     server.close();
 });
 
-function connect(): Promise<Socket> {
+function connect(): Promise<ClientSocket> {
     const client = io(`http://127.0.0.1:${testPort}`);
     clients.push(client);
     return new Promise(function (resolve) {
@@ -40,7 +49,7 @@ function connect(): Promise<Socket> {
 test("validates data", async function () {
     const client = await connect();
     assert.deepEqual(
-        await client.emitWithAck("initialize", {a: "hello world"}),
+        await client.emitWithAck("initialize", {a: "hello world"} as unknown),
         {type: "Error", data: {kind: "ValidationError"}},
     );
 });

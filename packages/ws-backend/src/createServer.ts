@@ -1,6 +1,7 @@
 import winston from "winston";
-import {z, ZodError} from "zod";
-import {Server, Socket} from "socket.io";
+import {ZodError} from "zod";
+import {Server as SocketIOServer} from "socket.io";
+import {ErrorMessage, InitializationData, Server, Socket} from "./SocketTypes";
 import {fetchLogEntriesAfter} from "./db";
 
 export interface ServerConfiguration {
@@ -10,60 +11,7 @@ export interface ServerConfiguration {
     };
 }
 
-const InitializationData = z
-    .object({
-        username: z.string(),
-        clientVersion: z.string(),
-        lastSeenLog: z.number(),
-        channelId: z.string(),
-    })
-    .required()
-    .partial({lastSeenLog: true});
-type InitializationData = z.infer<typeof InitializationData>;
-
-interface ClientToServerEvents {
-    initialize: (
-        initializationData: InitializationData,
-        callback: (data: EmptyAckMessage | ErrorMessage) => void,
-    ) => void;
-}
-
-interface ServerToClientEvents {
-    append: (logEntries: unknown[]) => void;
-}
-
-interface AckMessage {
-    type: string;
-    data?: unknown;
-}
-
-interface EmptyAckMessage extends AckMessage {
-    type: "Empty";
-    data?: undefined;
-}
-
-interface ErrorMessage extends AckMessage {
-    type: "Error";
-    data: {
-        kind: "ValidationError" | "UnknownError";
-    };
-}
-
-interface SocketData {
-    state: undefined | "Initialized" | "Ready";
-    channelId: string | undefined;
-    username: string | undefined;
-    lastSeenLog: number | undefined;
-}
-
-async function fetchAndSendLogEntries_(
-    socket: Socket<
-        ClientToServerEvents,
-        ServerToClientEvents,
-        Record<string, never>,
-        SocketData
-    >,
-): Promise<void> {
+async function fetchAndSendLogEntries_(socket: Socket): Promise<void> {
     const logEntries = await fetchLogEntriesAfter(socket.data.lastSeenLog);
     if (logEntries.length > 0) {
         socket.emit("append", logEntries);
@@ -73,12 +21,7 @@ async function fetchAndSendLogEntries_(
 
 function fetchAndSendLogEntries(
     config: ServerConfiguration,
-    socket: Socket<
-        ClientToServerEvents,
-        ServerToClientEvents,
-        Record<string, never>,
-        SocketData
-    >,
+    socket: Socket,
 ): void {
     fetchAndSendLogEntries_(socket).catch(function (e: unknown) {
         config.logger.error("Unknown error fetching log entries", e);
@@ -86,12 +29,7 @@ function fetchAndSendLogEntries(
 }
 
 export default function createServer(config: ServerConfiguration): Server {
-    const server = new Server<
-        ClientToServerEvents,
-        ServerToClientEvents,
-        Record<string, never>,
-        SocketData
-    >(config.listen.port);
+    const server = new SocketIOServer(config.listen.port) as Server;
 
     server.on("connection", function (socket) {
         socket.on("initialize", function (rawData, callback) {
