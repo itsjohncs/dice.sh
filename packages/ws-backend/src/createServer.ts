@@ -44,8 +44,8 @@ interface ErrorMessage extends AckMessage {
 }
 
 interface SocketData {
-    channelId: string;
-    username: string;
+    channelId: string | undefined;
+    username: string | undefined;
     lastSeenLog: number | undefined;
 }
 
