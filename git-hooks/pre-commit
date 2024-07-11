@@ -12,3 +12,8 @@ if ! npm run lint; then
     echo "ERROR: Lint failed." >&2
     exit 1
 fi
+
+if ! npm run test; then
+    echo "ERROR: Tests failed." >&2
+    exit 1
+fi
