@@ -57,3 +57,26 @@ test("accepts valid data", async function () {
         {type: "Empty"},
     );
 });
+
+test("error if initialized twice", async function () {
+    const client = await connect();
+    assert.deepEqual(
+        await client.emitWithAck("initialize", {
+            channelId: "testchannel",
+            clientVersion: "test-1",
+            username: "testuser",
+            lastSeenLog: undefined,
+        }),
+        {type: "Empty"},
+    );
+
+    assert.deepEqual(
+        await client.emitWithAck("initialize", {
+            channelId: "testchannel",
+            clientVersion: "test-1",
+            username: "testuser",
+            lastSeenLog: undefined,
+        }),
+        {type: "Error", data: {kind: "UnknownError"}},
+    );
+});

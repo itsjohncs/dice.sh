@@ -45,6 +45,7 @@ interface ErrorMessage extends AckMessage {
 }
 
 interface SocketData {
+    state: undefined | "Initialized";
     channelId: string | undefined;
     username: string | undefined;
     lastSeenLog: number | undefined;
@@ -61,10 +62,15 @@ export default function createServer(config: ServerConfiguration): Server {
     server.on("connection", function (socket) {
         socket.on("initialize", function (rawData, callback) {
             try {
+                if (socket.data.state !== undefined) {
+                    throw new Error("Invalid state");
+                }
+
                 const data = InitializationData.parse(rawData);
                 socket.data.channelId = data.channelId;
                 socket.data.lastSeenLog = data.lastSeenLog;
                 socket.data.username = data.username;
+                socket.data.state = "Initialized";
 
                 callback({type: "Empty"});
             } catch (e: unknown) {
