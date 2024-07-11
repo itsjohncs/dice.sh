@@ -23,7 +23,7 @@ test("validates data", async function () {
     });
     assert.deepEqual(
         await client.emitWithAck("initialize", {a: "hello world"}),
-        {error: "yes"},
+        {type: "Error", data: {kind: "ValidationError"}},
     );
     client.close();
     server.close();

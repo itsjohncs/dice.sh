@@ -1,5 +1,5 @@
 import winston from "winston";
-import {z} from "zod";
+import {z, ZodError} from "zod";
 import {Server} from "socket.io";
 
 export interface ServerConfiguration {
@@ -22,8 +22,25 @@ type InitializationData = z.infer<typeof InitializationData>;
 interface ClientToServerEvents {
     initialize: (
         initializationData: InitializationData,
-        callback: (data: unknown) => void,
+        callback: (data: EmptyAckMessage | ErrorMessage) => void,
     ) => void;
+}
+
+interface AckMessage {
+    type: string;
+    data?: unknown;
+}
+
+interface EmptyAckMessage extends AckMessage {
+    type: "Empty";
+    data?: undefined;
+}
+
+interface ErrorMessage extends AckMessage {
+    type: "Error";
+    data: {
+        kind: "ValidationError" | "UnknownError";
+    };
 }
 
 interface SocketData {
@@ -48,9 +65,20 @@ export default function createServer(config: ServerConfiguration): Server {
                 socket.data.lastSeenLog = data.lastSeenLog;
                 socket.data.username = data.username;
 
-                callback({error: "no"});
-            } catch {
-                callback({error: "yes"});
+                callback({type: "Empty"});
+            } catch (e: unknown) {
+                let kind: ErrorMessage["data"]["kind"];
+                if (e instanceof ZodError) {
+                    kind = "ValidationError";
+                } else {
+                    kind = "UnknownError";
+                }
+                callback({
+                    type: "Error",
+                    data: {kind},
+                });
+
+                socket.disconnect();
             }
         });
     });
