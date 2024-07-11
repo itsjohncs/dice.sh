@@ -1,30 +1,46 @@
-import {test} from "@jest/globals";
-import {io} from "socket.io-client";
+import {beforeEach, test} from "@jest/globals";
+import {io, Socket} from "socket.io-client";
 import createServer from "./createServer";
 import winston from "winston";
 import assert from "node:assert/strict";
+import {Server} from "socket.io";
 
 const logger = winston.createLogger({
     transports: [new winston.transports.Console()],
 });
 
-test("validates data", async function () {
-    const testPort = 24869;
-    const server = createServer({
+const testPort = 24869;
+let server: Server;
+beforeEach(function () {
+    server = createServer({
         logger,
         listen: {
             port: testPort,
         },
     });
+});
 
+const clients: Socket[] = [];
+afterEach(function () {
+    for (const client of clients) {
+        client.close();
+    }
+
+    server.close();
+});
+
+function connect(): Promise<Socket> {
     const client = io(`http://127.0.0.1:${testPort}`);
-    await new Promise<void>(function (resolve) {
-        client.once("connect", resolve);
+    clients.push(client);
+    return new Promise(function (resolve) {
+        client.once("connect", () => resolve(client));
     });
+}
+
+test("validates data", async function () {
+    const client = await connect();
     assert.deepEqual(
         await client.emitWithAck("initialize", {a: "hello world"}),
         {type: "Error", data: {kind: "ValidationError"}},
     );
-    client.close();
-    server.close();
 });
