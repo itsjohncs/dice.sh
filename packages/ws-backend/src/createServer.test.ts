@@ -1,4 +1,4 @@
-import {beforeEach, test} from "@jest/globals";
+import {beforeEach, test, jest} from "@jest/globals";
 import {io, Socket as SocketIOClientSocket} from "socket.io-client";
 import createServer from "./createServer";
 import winston from "winston";
@@ -8,6 +8,8 @@ import {
     Server,
     ServerToClientEvents,
 } from "./SocketTypes";
+
+jest.mock("./db");
 
 type ClientSocket = SocketIOClientSocket<
     ServerToClientEvents,
