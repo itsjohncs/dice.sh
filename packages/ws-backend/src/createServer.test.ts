@@ -44,3 +44,16 @@ test("validates data", async function () {
         {type: "Error", data: {kind: "ValidationError"}},
     );
 });
+
+test("accepts valid data", async function () {
+    const client = await connect();
+    assert.deepEqual(
+        await client.emitWithAck("initialize", {
+            channelId: "testchannel",
+            clientVersion: "test-1",
+            username: "testuser",
+            lastSeenLog: undefined,
+        }),
+        {type: "Empty"},
+    );
+});

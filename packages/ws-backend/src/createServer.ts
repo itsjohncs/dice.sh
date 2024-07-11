@@ -13,10 +13,11 @@ const InitializationData = z
     .object({
         username: z.string(),
         clientVersion: z.string(),
-        lastSeenLog: z.number().optional(),
+        lastSeenLog: z.number(),
         channelId: z.string(),
     })
-    .required();
+    .required()
+    .partial({lastSeenLog: true});
 type InitializationData = z.infer<typeof InitializationData>;
 
 interface ClientToServerEvents {
