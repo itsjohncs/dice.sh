@@ -1,6 +1,7 @@
 import winston from "winston";
 import {z, ZodError} from "zod";
-import {Server} from "socket.io";
+import {Server, Socket} from "socket.io";
+import {fetchLogEntriesAfter} from "./db";
 
 export interface ServerConfiguration {
     logger: winston.Logger;
@@ -27,6 +28,10 @@ interface ClientToServerEvents {
     ) => void;
 }
 
+interface ServerToClientEvents {
+    append: (logEntries: unknown[]) => void;
+}
+
 interface AckMessage {
     type: string;
     data?: unknown;
@@ -45,16 +50,45 @@ interface ErrorMessage extends AckMessage {
 }
 
 interface SocketData {
-    state: undefined | "Initialized";
+    state: undefined | "Initialized" | "Ready";
     channelId: string | undefined;
     username: string | undefined;
     lastSeenLog: number | undefined;
 }
 
+async function fetchAndSendLogEntries_(
+    socket: Socket<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        Record<string, never>,
+        SocketData
+    >,
+): Promise<void> {
+    const logEntries = await fetchLogEntriesAfter(socket.data.lastSeenLog);
+    if (logEntries.length > 0) {
+        socket.emit("append", logEntries);
+    }
+    socket.data.state = "Ready";
+}
+
+function fetchAndSendLogEntries(
+    config: ServerConfiguration,
+    socket: Socket<
+        ClientToServerEvents,
+        ServerToClientEvents,
+        Record<string, never>,
+        SocketData
+    >,
+): void {
+    fetchAndSendLogEntries_(socket).catch(function (e: unknown) {
+        config.logger.error("Unknown error fetching log entries", e);
+    });
+}
+
 export default function createServer(config: ServerConfiguration): Server {
     const server = new Server<
         ClientToServerEvents,
-        Record<string, never>,
+        ServerToClientEvents,
         Record<string, never>,
         SocketData
     >(config.listen.port);
@@ -73,6 +107,8 @@ export default function createServer(config: ServerConfiguration): Server {
                 socket.data.state = "Initialized";
 
                 callback({type: "Empty"});
+
+                fetchAndSendLogEntries(config, socket);
             } catch (e: unknown) {
                 let kind: ErrorMessage["data"]["kind"];
                 if (e instanceof ZodError) {
