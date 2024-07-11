@@ -76,8 +76,10 @@ export default function createServer(config: ServerConfiguration): Server {
             } catch (e: unknown) {
                 let kind: ErrorMessage["data"]["kind"];
                 if (e instanceof ZodError) {
+                    config.logger.warn("Validation error", e.format());
                     kind = "ValidationError";
                 } else {
+                    config.logger.error("Unknown error", e);
                     kind = "UnknownError";
                 }
                 callback({
