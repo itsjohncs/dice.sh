@@ -22,6 +22,7 @@ type ClientSocket = SocketIOClientSocket<
 >;
 
 const logger = winston.createLogger({
+    format: winston.format.simple(),
     transports: [new winston.transports.Console()],
 });
 
