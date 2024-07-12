@@ -1,12 +1,9 @@
 "use client";
 
-import {ReactElement, useCallback, useEffect, useState} from "react";
-import Terminal from "./Terminal";
+import {useCallback, useEffect, useState} from "react";
+import Terminal from "#root/Terminal";
 import {roll, RollLogEntry} from "@dice-sh/engine";
-import RollResult from "./Terminal/Contents/RollResult";
-import Help from "./Terminal/Contents/Help";
 import {useLocalStorage, useSessionStorage} from "usehooks-ts";
-import Contents from "./Terminal/Contents";
 
 const prompt = "$ ";
 
