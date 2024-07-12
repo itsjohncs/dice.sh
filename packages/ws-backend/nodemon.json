@@ -1,0 +1,6 @@
+{
+    "watch": ["src"],
+    "ignore": ["*.test.ts"],
+    "ext": "ts",
+    "exec": "vite-node src/main.ts"
+}

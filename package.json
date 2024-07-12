@@ -9,7 +9,7 @@
         "lint": "npm run build -w packages/eslint-config && npm run lint --workspaces --if-present",
         "test": "npm run test --workspaces --if-present",
         "prettify": "npm run prettify --workspaces --if-present",
-        "dev": "npm run build -w packages/engine && concurrently 'npm run dev -w packages/web-frontend' 'npm start -w packages/ws-backend'"
+        "dev": "npm run build -w packages/engine && concurrently 'npm run dev -w packages/web-frontend' 'npm run dev -w packages/ws-backend'"
     },
     "devDependencies": {
         "concurrently": "^8.2.2"
