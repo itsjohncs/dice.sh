@@ -65,7 +65,11 @@ function wrap<Args extends unknown[], AckMessage>(
 }
 
 export default function createServer(config: ServerConfiguration): Server {
-    const server = new SocketIOServer(config.listen.port) as Server;
+    const server = new SocketIOServer(config.listen.port, {
+        cors: {
+            origin: "http://localhost:16421",
+        },
+    }) as Server;
 
     server.on("connection", function (socket) {
         socket.on(
