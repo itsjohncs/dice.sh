@@ -45,7 +45,14 @@ function wrap<Args extends unknown[], AckMessage>(
             data: ErrorMessage | AckMessage,
         ) => void;
         try {
-            await handler(...args);
+            if (typeof callback !== "function") {
+                config.logger.error(
+                    "emit called for event expecting emitWithAwk.",
+                );
+                socket.disconnect();
+            } else {
+                await handler(...args);
+            }
         } catch (primaryError: unknown) {
             try {
                 let kind: ErrorMessage["data"]["kind"];
