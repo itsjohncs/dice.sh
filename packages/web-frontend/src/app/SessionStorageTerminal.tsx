@@ -14,7 +14,7 @@ const defaultEntries: RollLogEntry[] = [{type: "simple-info", subType: "help"}];
  * Smart component storing log entries in session storage.
  */
 export default function SessionStorageTerminal() {
-    const [history, setHistory] = usePromptHistory();
+    const [history, appendHistory] = usePromptHistory();
     const [entries, setEntries] = useSessionStorage<RollLogEntry[]>(
         "roll-log",
         defaultEntries,
@@ -38,15 +38,9 @@ export default function SessionStorageTerminal() {
                     return [...prev, entry];
                 }
             });
-            setHistory(function (prev) {
-                if (value.trim() !== "" && value !== prev[prev.length - 1]) {
-                    return [...prev, value];
-                }
-
-                return prev;
-            });
+            appendHistory(value);
         },
-        [setEntries, setHistory],
+        [setEntries, appendHistory],
     );
 
     return (

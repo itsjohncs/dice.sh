@@ -9,7 +9,7 @@ import usePromptHistory from "#root/usePromptHistory";
 const prompt = "$ ";
 
 export default function ChannelTerminal() {
-    const [history, setHistory] = usePromptHistory();
+    const [history, appendHistory] = usePromptHistory();
     const [entries, setEntries] = useState<RollLogEntry[]>([]);
 
     // This lets us hydrate correctly despite our use of browser storage
@@ -30,15 +30,9 @@ export default function ChannelTerminal() {
                     return [...prev, entry];
                 }
             });
-            setHistory(function (prev) {
-                if (value.trim() !== "" && value !== prev[prev.length - 1]) {
-                    return [...prev, value];
-                }
-
-                return prev;
-            });
+            appendHistory(value);
         },
-        [setEntries, setHistory],
+        [setEntries, appendHistory],
     );
 
     return (
