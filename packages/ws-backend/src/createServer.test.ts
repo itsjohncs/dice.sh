@@ -103,12 +103,15 @@ test("sends initial entries to client", async function () {
     fetchLogEntriesAfter.mockResolvedValue(expectedLogEntries);
 
     const client = await connect();
-    await initialize(client);
-    const actualLogEntries = await new Promise<unknown[]>(function (resolve) {
+    const actualLogEntriesPromise = new Promise<unknown[]>(function (resolve) {
         client.once("history", function (logEntries) {
             resolve(logEntries);
         });
     });
+    const [_, actualLogEntries] = await Promise.all([
+        initialize(client),
+        actualLogEntriesPromise,
+    ]);
     assert.deepEqual(actualLogEntries, expectedLogEntries);
 });
 
