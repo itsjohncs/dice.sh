@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useReducer, useRef, useState} from "react";
 import Terminal from "#root/Terminal";
 import {roll, RollLogEntry} from "@dice-sh/engine";
 import {useLocalStorage, useSessionStorage} from "usehooks-ts";
@@ -18,17 +18,26 @@ function useSocket(): ReturnType<typeof io> {
 function useChannelConnection() {
     const socket = useSocket();
 
-    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [isConnected, setIsConnected] = useState(false);
     const [pastEntries, setPastEntries] = useState<unknown[]>([]);
     const [entries, setEntries] = useState<unknown[]>([]);
 
     useEffect(() => {
         function onConnect() {
             setIsConnected(true);
+
+            if (!socket.recovered) {
+                socket.emitWithAck("initialize", {
+                    channelId: "testchannel",
+                    clientVersion: "test-1",
+                    username: "testuser",
+                    lastSeenLog: undefined,
+                });
+            }
         }
 
         function onDisconnect() {
-            setIsConnected(false);
+            setIsConnected(true);
         }
 
         function onHistory(value: unknown[]) {
@@ -53,7 +62,7 @@ function useChannelConnection() {
     }, []);
 
     const append = useCallback(function (entry: unknown) {
-        socket.emit("append", entry);
+        return socket.emitWithAck("append", entry);
     }, []);
 
     return {
