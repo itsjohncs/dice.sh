@@ -8,6 +8,9 @@ import {
     Server,
     ServerToClientEvents,
 } from "./SocketTypes";
+import * as db from "./db";
+
+const {fetchLogEntriesAfter} = db as typeof import("./__mocks__/db");
 
 jest.mock("./db");
 
@@ -90,4 +93,26 @@ test("error if initialized twice", async function () {
         }),
         {type: "Error", data: {kind: "UnknownError"}},
     );
+});
+
+test("sends messages", async function () {
+    const expectedLogEntries = [{a: 1}, {b: 2}];
+    fetchLogEntriesAfter.mockResolvedValue(expectedLogEntries);
+
+    const client = await connect();
+    assert.deepEqual(
+        await client.emitWithAck("initialize", {
+            channelId: "testchannel",
+            clientVersion: "test-1",
+            username: "testuser",
+            lastSeenLog: undefined,
+        }),
+        {type: "Empty"},
+    );
+    const actualLogEntries = await new Promise<unknown[]>(function (resolve) {
+        client.once("append", function (logEntries) {
+            resolve(logEntries);
+        });
+    });
+    assert.deepEqual(actualLogEntries, expectedLogEntries);
 });
