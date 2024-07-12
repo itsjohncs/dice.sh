@@ -9,7 +9,10 @@ const prompt = "$ ";
 
 const defaultEntries: RollLogEntry[] = [{type: "simple-info", subType: "help"}];
 
-export default function SmartTerminal() {
+/**
+ * Smart component storing log entries in session storage.
+ */
+export default function SessionStorageTerminal() {
     const [history, setHistory] = useLocalStorage<string[]>(
         "prompt-history",
         [],
