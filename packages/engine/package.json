@@ -4,7 +4,8 @@
     "scripts": {
         "build": "tsc",
         "lint": "tsc --noEmit && eslint && prettier --list-different .",
-        "prettify": "prettier --write ."
+        "prettify": "prettier --write .",
+        "dev": "nodemon"
     },
     "exports": "./dist/index.js",
     "types": "./dist/index.d.ts",
