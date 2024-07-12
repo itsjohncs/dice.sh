@@ -23,7 +23,7 @@ type ClientSocket = SocketIOClientSocket<
 
 const logger = winston.createLogger({
     format: winston.format.simple(),
-    transports: [new winston.transports.Console()],
+    transports: [new winston.transports.Console({silent: true})],
 });
 
 const testPort = 24869;
