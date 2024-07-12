@@ -1,12 +1,17 @@
 {
     "private": true,
-    "workspaces": ["packages/*"],
+    "workspaces": [
+        "packages/*"
+    ],
     "scripts": {
         "docker-build": "docker-compose -f docker/docker-compose.base.yml build",
         "docker-dev": "docker-compose -f docker/docker-compose.base.yml -f docker/docker-compose.dev.yml up",
         "lint": "npm run build -w packages/eslint-config && npm run lint --workspaces --if-present",
         "test": "npm run test --workspaces --if-present",
         "prettify": "npm run prettify --workspaces --if-present",
-        "dev": "npm run build -w packages/engine && npm run dev -w packages/web-frontend"
+        "dev": "npm run build -w packages/engine && concurrently 'npm run dev -w packages/web-frontend' 'npm start -w packages/ws-backend'"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
     }
 }
