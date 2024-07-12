@@ -8,17 +8,9 @@ import usePromptHistory from "#root/usePromptHistory";
 
 const prompt = "$ ";
 
-const defaultEntries: RollLogEntry[] = [{type: "simple-info", subType: "help"}];
-
-/**
- * Smart component storing log entries in session storage.
- */
-export default function SessionStorageTerminal() {
+export default function ChannelTerminal() {
     const [history, setHistory] = usePromptHistory();
-    const [entries, setEntries] = useSessionStorage<RollLogEntry[]>(
-        "roll-log",
-        defaultEntries,
-    );
+    const [entries, setEntries] = useState<RollLogEntry[]>([]);
 
     // This lets us hydrate correctly despite our use of browser storage
     const [loading, setLoading] = useState(true);
@@ -54,7 +46,7 @@ export default function SessionStorageTerminal() {
             prompt={prompt}
             onSubmit={handleSubmit}
             history={history}
-            entries={loading ? defaultEntries : entries}
+            entries={loading ? [] : entries}
         />
     );
 }
