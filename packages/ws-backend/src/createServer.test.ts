@@ -126,7 +126,7 @@ test("accepts entries from client", async function () {
     const client = await connect();
     assert.deepEqual(
         await client.emitWithAck("initialize", {
-            channelId: "testchannel",
+            channelId: "accept-entries-from-client-test",
             clientVersion: "test-1",
             username: "testuser",
             lastSeenLog: undefined,
