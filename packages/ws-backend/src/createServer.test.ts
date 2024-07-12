@@ -5,6 +5,7 @@ import winston from "winston";
 import assert from "node:assert/strict";
 import {
     ClientToServerEvents,
+    InitializationData,
     LogEntry,
     Server,
     ServerToClientEvents,
@@ -53,6 +54,22 @@ function connect(): Promise<ClientSocket> {
     });
 }
 
+async function initialize(
+    socket: ClientSocket,
+    initializationData?: Partial<InitializationData>,
+): Promise<void> {
+    assert.deepEqual(
+        await socket.emitWithAck("initialize", {
+            channelId: "testchannel",
+            clientVersion: "test-1",
+            username: "testuser",
+            lastSeenLog: undefined,
+            ...initializationData,
+        }),
+        {type: "Empty"},
+    );
+}
+
 test("validates data", async function () {
     const client = await connect();
     assert.deepEqual(
@@ -63,28 +80,12 @@ test("validates data", async function () {
 
 test("accepts valid data", async function () {
     const client = await connect();
-    assert.deepEqual(
-        await client.emitWithAck("initialize", {
-            channelId: "testchannel",
-            clientVersion: "test-1",
-            username: "testuser",
-            lastSeenLog: undefined,
-        }),
-        {type: "Empty"},
-    );
+    await initialize(client);
 });
 
 test("error if initialized twice", async function () {
     const client = await connect();
-    assert.deepEqual(
-        await client.emitWithAck("initialize", {
-            channelId: "testchannel",
-            clientVersion: "test-1",
-            username: "testuser",
-            lastSeenLog: undefined,
-        }),
-        {type: "Empty"},
-    );
+    await initialize(client);
 
     assert.deepEqual(
         await client.emitWithAck("initialize", {
@@ -102,15 +103,7 @@ test("sends initial entries to client", async function () {
     fetchLogEntriesAfter.mockResolvedValue(expectedLogEntries);
 
     const client = await connect();
-    assert.deepEqual(
-        await client.emitWithAck("initialize", {
-            channelId: "testchannel",
-            clientVersion: "test-1",
-            username: "testuser",
-            lastSeenLog: undefined,
-        }),
-        {type: "Empty"},
-    );
+    await initialize(client);
     const actualLogEntries = await new Promise<unknown[]>(function (resolve) {
         client.once("history", function (logEntries) {
             resolve(logEntries);
@@ -125,15 +118,8 @@ test("accepts entries from client", async function () {
     appendLogEntry.mockImplementation(actualDb.appendLogEntry);
 
     const client = await connect();
-    assert.deepEqual(
-        await client.emitWithAck("initialize", {
-            channelId: "accept-entries-from-client-test",
-            clientVersion: "test-1",
-            username: "testuser",
-            lastSeenLog: undefined,
-        }),
-        {type: "Empty"},
-    );
+    await initialize(client, {channelId: "accept-entries-from-client-test"});
+
     const expectedEntries = [{d: 3}, {z: 5}];
     assert.deepEqual(await client.emitWithAck("append", expectedEntries[0]), {
         type: "Append",
@@ -150,31 +136,19 @@ test("broadcasts entries to other clients", async function () {
     fetchLogEntriesAfter.mockImplementation(actualDb.fetchLogEntriesAfter);
     appendLogEntry.mockImplementation(actualDb.appendLogEntry);
 
+    const channelId = "broadcast-between-clients-test";
+
     const clientA = await connect();
-    assert.deepEqual(
-        await clientA.emitWithAck("initialize", {
-            channelId: "broadcast-between-clients-test",
-            clientVersion: "test-1",
-            username: "testuserA",
-            lastSeenLog: undefined,
-        }),
-        {type: "Empty"},
-    );
+    await initialize(clientA, {channelId, username: "a"});
+
     const clientAEntries: LogEntry[] = [];
     clientA.on("append", function (logEntry) {
         clientAEntries.push(logEntry);
     });
 
     const clientB = await connect();
-    assert.deepEqual(
-        await clientB.emitWithAck("initialize", {
-            channelId: "broadcast-between-clients-test",
-            clientVersion: "test-1",
-            username: "testuserB",
-            lastSeenLog: undefined,
-        }),
-        {type: "Empty"},
-    );
+    await initialize(clientB, {channelId, username: "b"});
+
     const actualEntries: LogEntry[] = [];
     clientB.on("append", function (logEntry) {
         actualEntries.push(logEntry);
