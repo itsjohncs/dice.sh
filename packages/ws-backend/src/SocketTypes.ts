@@ -26,7 +26,8 @@ export interface ClientToServerEvents {
 }
 
 export interface ServerToClientEvents {
-    append: (logEntries: LogEntry[]) => void;
+    history: (logEntries: LogEntry[]) => void;
+    append: (logEntry: LogEntry) => void;
 }
 
 interface AckMessage {

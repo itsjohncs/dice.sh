@@ -17,7 +17,7 @@ async function fetchAndSendLogEntries_(socket: Socket): Promise<void> {
         socket.data.lastSeenLog,
     );
     if (logEntries.length > 0) {
-        socket.emit("append", logEntries);
+        socket.emit("history", logEntries);
     }
     socket.data.state = "Ready";
 }
@@ -81,6 +81,8 @@ export default function createServer(config: ServerConfiguration): Server {
                 socket.data.username = data.username;
                 socket.data.state = "Initialized";
 
+                socket.join(socket.data.channelId);
+
                 callback({type: "Empty"});
 
                 fetchAndSendLogEntries(config, socket);
@@ -98,6 +100,8 @@ export default function createServer(config: ServerConfiguration): Server {
                     socket.data.channelId,
                     rawData,
                 );
+
+                socket.to(socket.data.channelId).emit("append", rawData);
 
                 callback({type: "Append", data: {lastSeenLog}});
             }),

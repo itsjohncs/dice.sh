@@ -5,6 +5,7 @@ import winston from "winston";
 import assert from "node:assert/strict";
 import {
     ClientToServerEvents,
+    LogEntry,
     Server,
     ServerToClientEvents,
 } from "./SocketTypes";
@@ -111,7 +112,7 @@ test("sends initial entries to client", async function () {
         {type: "Empty"},
     );
     const actualLogEntries = await new Promise<unknown[]>(function (resolve) {
-        client.once("append", function (logEntries) {
+        client.once("history", function (logEntries) {
             resolve(logEntries);
         });
     });
@@ -142,4 +143,53 @@ test("accepts entries from client", async function () {
         type: "Append",
         data: {lastSeenLog: 1},
     });
+});
+
+test("broadcasts entries to other clients", async function () {
+    const actualDb = jest.requireActual("./db") as typeof import("./db");
+    fetchLogEntriesAfter.mockImplementation(actualDb.fetchLogEntriesAfter);
+    appendLogEntry.mockImplementation(actualDb.appendLogEntry);
+
+    const clientA = await connect();
+    assert.deepEqual(
+        await clientA.emitWithAck("initialize", {
+            channelId: "broadcast-between-clients-test",
+            clientVersion: "test-1",
+            username: "testuserA",
+            lastSeenLog: undefined,
+        }),
+        {type: "Empty"},
+    );
+    const clientAEntries: LogEntry[] = [];
+    clientA.on("append", function (logEntry) {
+        clientAEntries.push(logEntry);
+    });
+
+    const clientB = await connect();
+    assert.deepEqual(
+        await clientB.emitWithAck("initialize", {
+            channelId: "broadcast-between-clients-test",
+            clientVersion: "test-1",
+            username: "testuserB",
+            lastSeenLog: undefined,
+        }),
+        {type: "Empty"},
+    );
+    const actualEntries: LogEntry[] = [];
+    clientB.on("append", function (logEntry) {
+        actualEntries.push(logEntry);
+    });
+
+    const expectedEntries = [{d: 3}, {z: 5}];
+    assert.deepEqual(await clientA.emitWithAck("append", expectedEntries[0]), {
+        type: "Append",
+        data: {lastSeenLog: 0},
+    });
+    assert.deepEqual(await clientA.emitWithAck("append", expectedEntries[1]), {
+        type: "Append",
+        data: {lastSeenLog: 1},
+    });
+
+    assert.deepEqual(actualEntries, expectedEntries);
+    assert.deepEqual(clientAEntries, []);
 });
