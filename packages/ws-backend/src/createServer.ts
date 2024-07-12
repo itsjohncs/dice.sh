@@ -46,20 +46,32 @@ function wrap<Args extends unknown[], AckMessage>(
         ) => void;
         try {
             await handler(...args);
-        } catch (e: unknown) {
-            let kind: ErrorMessage["data"]["kind"];
-            if (e instanceof ZodError) {
-                config.logger.warn("Validation error", e.format());
-                kind = "ValidationError";
-            } else {
-                config.logger.error("Unknown error", e);
-                kind = "UnknownError";
+        } catch (primaryError: unknown) {
+            try {
+                let kind: ErrorMessage["data"]["kind"];
+                if (primaryError instanceof ZodError) {
+                    config.logger.warn(
+                        "Validation error",
+                        primaryError.format(),
+                    );
+                    kind = "ValidationError";
+                } else {
+                    config.logger.error("Unknown error", primaryError);
+                    kind = "UnknownError";
+                }
+                callback({
+                    type: "Error",
+                    data: {kind},
+                });
+            } catch (secondaryError: unknown) {
+                config.logger.error(
+                    "Got secondary error handling primary error",
+                    primaryError,
+                    secondaryError,
+                );
+            } finally {
+                socket.disconnect();
             }
-            callback({
-                type: "Error",
-                data: {kind},
-            });
-            socket.disconnect();
         }
     };
 }
