@@ -1,4 +1,4 @@
-export type LogEntry = unknown;
+import {LogEntry} from "./SocketTypes";
 
 const data = new Map<string, LogEntry[]>();
 
@@ -30,6 +30,12 @@ export async function fetchLogEntriesAfter(
 export async function appendLogEntry(
     channelId: string,
     logEntry: LogEntry,
-): Promise<void> {
-    data.get(channelId)?.push(logEntry);
+): Promise<number> {
+    let entries = data.get(channelId);
+    if (!entries) {
+        entries = [];
+        data.set(channelId, entries);
+    }
+    entries.push(logEntry);
+    return entries.length - 1;
 }

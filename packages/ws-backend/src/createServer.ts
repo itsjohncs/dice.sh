@@ -2,7 +2,7 @@ import winston from "winston";
 import {ZodError} from "zod";
 import {Server as SocketIOServer} from "socket.io";
 import {ErrorMessage, InitializationData, Server, Socket} from "./SocketTypes";
-import {fetchLogEntriesAfter} from "./db";
+import {appendLogEntry, fetchLogEntriesAfter} from "./db";
 
 export interface ServerConfiguration {
     logger: winston.Logger;
@@ -36,16 +36,16 @@ function wrap<Args extends unknown[], AckMessage>(
     socket: Socket,
     handler: (
         ...args: [...Args, (data: ErrorMessage | AckMessage) => void]
-    ) => void,
+    ) => Promise<void> | void,
 ) {
-    return function (
+    return async function (
         ...args: [...Args, (data: ErrorMessage | AckMessage) => void]
     ) {
         const callback = args[args.length - 1] as (
             data: ErrorMessage | AckMessage,
         ) => void;
         try {
-            handler(...args);
+            await handler(...args);
         } catch (e: unknown) {
             let kind: ErrorMessage["data"]["kind"];
             if (e instanceof ZodError) {
@@ -72,7 +72,7 @@ export default function createServer(config: ServerConfiguration): Server {
             "initialize",
             wrap(config, socket, function (rawData, callback) {
                 if (socket.data.state !== undefined) {
-                    throw new Error("Invalid state");
+                    throw new Error("Invalid state.");
                 }
 
                 const data = InitializationData.parse(rawData);
@@ -84,6 +84,22 @@ export default function createServer(config: ServerConfiguration): Server {
                 callback({type: "Empty"});
 
                 fetchAndSendLogEntries(config, socket);
+            }),
+        );
+
+        socket.on(
+            "append",
+            wrap(config, socket, async function (rawData, callback) {
+                if (socket.data.state !== "Ready") {
+                    throw new Error("Invalid state.");
+                }
+
+                const lastSeenLog = await appendLogEntry(
+                    socket.data.channelId,
+                    rawData,
+                );
+
+                callback({type: "Append", data: {lastSeenLog}});
             }),
         );
     });

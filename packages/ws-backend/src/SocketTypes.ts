@@ -1,6 +1,8 @@
 import {z} from "zod";
 import {Server as SocketIOServer, Socket as SocketIOSocket} from "socket.io";
 
+export type LogEntry = unknown;
+
 export const InitializationData = z
     .object({
         username: z.string(),
@@ -17,10 +19,14 @@ export interface ClientToServerEvents {
         initializationData: InitializationData,
         callback: (data: EmptyAckMessage | ErrorMessage) => void,
     ) => void;
+    append: (
+        logEntry: LogEntry,
+        callback: (data: AppendAck | ErrorMessage) => void,
+    ) => void;
 }
 
 export interface ServerToClientEvents {
-    append: (logEntries: unknown[]) => void;
+    append: (logEntries: LogEntry[]) => void;
 }
 
 interface AckMessage {
@@ -37,6 +43,13 @@ export interface ErrorMessage extends AckMessage {
     type: "Error";
     data: {
         kind: "ValidationError" | "UnknownError";
+    };
+}
+
+export interface AppendAck extends AckMessage {
+    type: "Append";
+    data: {
+        lastSeenLog: number;
     };
 }
 

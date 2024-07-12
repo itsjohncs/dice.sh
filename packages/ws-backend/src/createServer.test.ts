@@ -10,9 +10,9 @@ import {
 } from "./SocketTypes";
 import * as db from "./db";
 
-const {fetchLogEntriesAfter} = db as typeof import("./__mocks__/db");
-
 jest.mock("./db");
+
+const {fetchLogEntriesAfter, appendLogEntry} = jest.mocked(db);
 
 type ClientSocket = SocketIOClientSocket<
     ServerToClientEvents,
@@ -26,6 +26,7 @@ const logger = winston.createLogger({
 const testPort = 24869;
 let server: Server;
 beforeEach(function () {
+    jest.clearAllMocks();
     server = createServer({
         logger,
         listen: {
@@ -95,7 +96,7 @@ test("error if initialized twice", async function () {
     );
 });
 
-test("sends messages", async function () {
+test("sends initial entries to client", async function () {
     const expectedLogEntries = [{a: 1}, {b: 2}];
     fetchLogEntriesAfter.mockResolvedValue(expectedLogEntries);
 
@@ -115,4 +116,30 @@ test("sends messages", async function () {
         });
     });
     assert.deepEqual(actualLogEntries, expectedLogEntries);
+});
+
+test("accepts entries from client", async function () {
+    const actualDb = jest.requireActual("./db") as typeof import("./db");
+    fetchLogEntriesAfter.mockImplementation(actualDb.fetchLogEntriesAfter);
+    appendLogEntry.mockImplementation(actualDb.appendLogEntry);
+
+    const client = await connect();
+    assert.deepEqual(
+        await client.emitWithAck("initialize", {
+            channelId: "testchannel",
+            clientVersion: "test-1",
+            username: "testuser",
+            lastSeenLog: undefined,
+        }),
+        {type: "Empty"},
+    );
+    const expectedEntries = [{d: 3}, {z: 5}];
+    assert.deepEqual(await client.emitWithAck("append", expectedEntries[0]), {
+        type: "Append",
+        data: {lastSeenLog: 0},
+    });
+    assert.deepEqual(await client.emitWithAck("append", expectedEntries[1]), {
+        type: "Append",
+        data: {lastSeenLog: 1},
+    });
 });
