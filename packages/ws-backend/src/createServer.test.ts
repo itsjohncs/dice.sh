@@ -130,12 +130,10 @@ test("accepts entries from client", async function () {
 
     const expectedEntries = [{d: 3}, {z: 5}];
     assert.deepEqual(await client.emitWithAck("append", expectedEntries[0]), {
-        type: "Append",
-        data: {lastSeenLog: 0},
+        type: "Empty",
     });
     assert.deepEqual(await client.emitWithAck("append", expectedEntries[1]), {
-        type: "Append",
-        data: {lastSeenLog: 1},
+        type: "Empty",
     });
 });
 
@@ -156,21 +154,19 @@ test("broadcasts entries to other clients", async function () {
     const clientB = await connect();
     await initialize(clientB, {channelId, username: "b"});
 
-    const actualEntries: LogEntry[] = [];
+    const clientBEntries: LogEntry[] = [];
     clientB.on("append", function (logEntry) {
-        actualEntries.push(logEntry);
+        clientBEntries.push(logEntry);
     });
 
     const expectedEntries = [{d: 3}, {z: 5}];
     assert.deepEqual(await clientA.emitWithAck("append", expectedEntries[0]), {
-        type: "Append",
-        data: {lastSeenLog: 0},
+        type: "Empty",
     });
     assert.deepEqual(await clientA.emitWithAck("append", expectedEntries[1]), {
-        type: "Append",
-        data: {lastSeenLog: 1},
+        type: "Empty",
     });
 
-    assert.deepEqual(actualEntries, expectedEntries);
-    assert.deepEqual(clientAEntries, []);
+    assert.deepEqual(clientBEntries, expectedEntries);
+    assert.deepEqual(clientAEntries, expectedEntries);
 });

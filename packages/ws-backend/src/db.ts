@@ -30,12 +30,11 @@ export async function fetchLogEntriesAfter(
 export async function appendLogEntry(
     channelId: string,
     logEntry: LogEntry,
-): Promise<number> {
+): Promise<void> {
     let entries = data.get(channelId);
     if (!entries) {
         entries = [];
         data.set(channelId, entries);
     }
     entries.push(logEntry);
-    return entries.length - 1;
 }

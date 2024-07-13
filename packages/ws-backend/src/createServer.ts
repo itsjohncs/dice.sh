@@ -120,14 +120,11 @@ export default function createServer(config: ServerConfiguration): Server {
                     throw new Error("Invalid state.");
                 }
 
-                const lastSeenLog = await appendLogEntry(
-                    socket.data.channelId,
-                    rawData,
-                );
+                await appendLogEntry(socket.data.channelId, rawData);
 
-                socket.to(socket.data.channelId).emit("append", rawData);
+                server.to(socket.data.channelId).emit("append", rawData);
 
-                callback({type: "Append", data: {lastSeenLog}});
+                callback({type: "Empty"});
             }),
         );
     });

@@ -31,13 +31,6 @@ export interface ErrorMessage extends AckMessage {
     };
 }
 
-export interface AppendAck extends AckMessage {
-    type: "Append";
-    data: {
-        lastSeenLog: number;
-    };
-}
-
 export interface ClientToServerEvents {
     initialize: (
         initializationData: InitializationData,
@@ -45,7 +38,7 @@ export interface ClientToServerEvents {
     ) => void;
     append: (
         logEntry: LogEntry,
-        callback: (data: AppendAck | ErrorMessage) => void,
+        callback: (data: EmptyAckMessage | ErrorMessage) => void,
     ) => void;
 }
 
