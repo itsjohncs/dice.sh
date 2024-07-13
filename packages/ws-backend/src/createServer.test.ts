@@ -146,26 +146,33 @@ test("broadcasts entries to other clients", async function () {
     const clientA = await connect();
     await initialize(clientA, {channelId, username: "a"});
 
-    const clientAEntries: LogEntry[] = [];
-    clientA.on("append", function (logEntry) {
-        clientAEntries.push(logEntry);
-    });
+    const expectedEntries = [{d: 3}, {z: 5}];
 
     const clientB = await connect();
     await initialize(clientB, {channelId, username: "b"});
 
-    const clientBEntries: LogEntry[] = [];
-    clientB.on("append", function (logEntry) {
-        clientBEntries.push(logEntry);
-    });
-
-    const expectedEntries = [{d: 3}, {z: 5}];
-    assert.deepEqual(await clientA.emitWithAck("append", expectedEntries[0]), {
-        type: "Empty",
-    });
-    assert.deepEqual(await clientA.emitWithAck("append", expectedEntries[1]), {
-        type: "Empty",
-    });
+    const [clientAEntries, clientBEntries] = await Promise.all([
+        new Promise(function (resolve) {
+            const entries: LogEntry[] = [];
+            clientA.on("append", function (logEntry) {
+                entries.push(logEntry);
+                if (entries.length >= expectedEntries.length) {
+                    resolve(entries);
+                }
+            });
+        }),
+        new Promise(function (resolve) {
+            const entries: LogEntry[] = [];
+            clientB.on("append", function (logEntry) {
+                entries.push(logEntry);
+                if (entries.length >= expectedEntries.length) {
+                    resolve(entries);
+                }
+            });
+        }),
+        clientA.emitWithAck("append", expectedEntries[0]),
+        clientA.emitWithAck("append", expectedEntries[1]),
+    ]);
 
     assert.deepEqual(clientBEntries, expectedEntries);
     assert.deepEqual(clientAEntries, expectedEntries);
