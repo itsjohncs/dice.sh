@@ -1,4 +1,4 @@
-import {LogEntry} from "./SocketTypes";
+import {LogEntry} from "@dice-sh/engine";
 
 const data = new Map<string, LogEntry[]>();
 

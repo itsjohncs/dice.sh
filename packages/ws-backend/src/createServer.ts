@@ -1,7 +1,8 @@
 import winston from "winston";
 import {ZodError} from "zod";
 import {Server as SocketIOServer} from "socket.io";
-import {ErrorMessage, InitializationData, Server, Socket} from "./SocketTypes";
+import {Server, Socket} from "./ServerSocketTypes";
+import {ErrorMessage, InitializationData} from "@dice-sh/engine";
 import {appendLogEntry, fetchLogEntriesAfter} from "./db";
 
 export interface ServerConfiguration {

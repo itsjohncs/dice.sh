@@ -2,13 +2,13 @@ import {beforeEach, test, jest} from "@jest/globals";
 import {io, Socket as SocketIOClientSocket} from "socket.io-client";
 import winston from "winston";
 import assert from "node:assert/strict";
+import {Server} from "./ServerSocketTypes";
 import {
-    ClientToServerEvents,
-    InitializationData,
-    LogEntry,
-    Server,
-    ServerToClientEvents,
-} from "./SocketTypes";
+    type ClientToServerEvents,
+    type InitializationData,
+    type LogEntry,
+    type ServerToClientEvents,
+} from "@dice-sh/engine";
 
 const actualDb = await import("./db");
 const mockedDb = {

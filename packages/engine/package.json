@@ -11,12 +11,14 @@
     "types": "./dist/index.d.ts",
     "dependencies": {
         "@dice-roller/rpg-dice-roller": "^5.5.0",
-        "commander": "^12.1.0"
+        "commander": "^12.1.0",
+        "zod": "^3.23.8"
     },
     "devDependencies": {
         "@dice-sh/eslint-config": "^1.0.0",
         "eslint": "^9.6.0",
         "prettier": "^3.3.2",
+        "socket.io-client": "^4.7.5",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5"
     },
