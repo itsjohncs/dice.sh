@@ -2,13 +2,13 @@
 
 import {useCallback, useEffect, useReducer, useRef, useState} from "react";
 import Terminal from "#root/Terminal";
-import {roll, RollLogEntry} from "@dice-sh/engine";
+import {roll, RollLogEntry, ClientSocket, LogEntry} from "@dice-sh/engine";
 import {useLocalStorage, useSessionStorage} from "usehooks-ts";
 import usePromptHistory from "#root/usePromptHistory";
 import {io} from "socket.io-client";
 
-function useSocket(): ReturnType<typeof io> {
-    const ref = useRef<ReturnType<typeof io>>();
+function useSocket(): ClientSocket {
+    const ref = useRef<ClientSocket>();
     if (!ref.current) {
         ref.current = io("http://localhost:45856");
     }
@@ -19,8 +19,8 @@ function useChannelConnection() {
     const socket = useSocket();
 
     const [isConnected, setIsConnected] = useState(false);
-    const [pastEntries, setPastEntries] = useState<unknown[]>([]);
-    const [entries, setEntries] = useState<unknown[]>([]);
+    const [pastEntries, setPastEntries] = useState<LogEntry[]>([]);
+    const [entries, setEntries] = useState<LogEntry[]>([]);
 
     useEffect(() => {
         function onConnect() {
@@ -40,11 +40,11 @@ function useChannelConnection() {
             setIsConnected(true);
         }
 
-        function onHistory(value: unknown[]) {
+        function onHistory(value: LogEntry[]) {
             setPastEntries(value);
         }
 
-        function onAppend(value: unknown) {
+        function onAppend(value: LogEntry) {
             setEntries((previous) => [...previous, value]);
         }
 
@@ -61,7 +61,7 @@ function useChannelConnection() {
         };
     }, []);
 
-    const append = useCallback(function (entry: unknown) {
+    const append = useCallback(function (entry: LogEntry) {
         return socket.emitWithAck("append", entry);
     }, []);
 
