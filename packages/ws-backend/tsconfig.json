@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "skipLibCheck": true,
+        "target": "ESNext",
         "module": "Preserve",
         "esModuleInterop": true,
         "paths": {

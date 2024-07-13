@@ -5,6 +5,7 @@ const config: JestConfigWithTsJest = {
     collectCoverage: true,
     coverageDirectory: "coverage",
     coverageProvider: "v8",
+    extensionsToTreatAsEsm: [".ts"],
     transform: {
         ...createDefaultEsmPreset().transform,
     },

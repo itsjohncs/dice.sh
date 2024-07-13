@@ -1,6 +1,5 @@
 import {beforeEach, test, jest} from "@jest/globals";
 import {io, Socket as SocketIOClientSocket} from "socket.io-client";
-import createServer from "./createServer";
 import winston from "winston";
 import assert from "node:assert/strict";
 import {
@@ -10,11 +9,16 @@ import {
     Server,
     ServerToClientEvents,
 } from "./SocketTypes";
-import * as db from "./db";
 
-jest.mock("./db");
-
-const {fetchLogEntriesAfter, appendLogEntry} = jest.mocked(db);
+const actualDb = await import("./db");
+const mockedDb = {
+    appendLogEntry: jest.fn<typeof actualDb.appendLogEntry>(),
+    fetchLogEntriesAfter: jest.fn<typeof actualDb.fetchLogEntriesAfter>(),
+};
+jest.unstable_mockModule("./db", async function () {
+    return mockedDb;
+});
+const {appendLogEntry, fetchLogEntriesAfter} = mockedDb;
 
 type ClientSocket = SocketIOClientSocket<
     ServerToClientEvents,
@@ -28,8 +32,9 @@ const logger = winston.createLogger({
 
 const testPort = 24869;
 let server: Server;
-beforeEach(function () {
-    jest.clearAllMocks();
+beforeEach(async function () {
+    const {default: createServer} = await import("./createServer");
+    jest.resetAllMocks();
     server = createServer({
         logger,
         listen: {
@@ -117,7 +122,6 @@ test("sends initial entries to client", async function () {
 });
 
 test("accepts entries from client", async function () {
-    const actualDb = jest.requireActual("./db") as typeof import("./db");
     fetchLogEntriesAfter.mockImplementation(actualDb.fetchLogEntriesAfter);
     appendLogEntry.mockImplementation(actualDb.appendLogEntry);
 
@@ -136,7 +140,6 @@ test("accepts entries from client", async function () {
 });
 
 test("broadcasts entries to other clients", async function () {
-    const actualDb = jest.requireActual("./db") as typeof import("./db");
     fetchLogEntriesAfter.mockImplementation(actualDb.fetchLogEntriesAfter);
     appendLogEntry.mockImplementation(actualDb.appendLogEntry);
 
