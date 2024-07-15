@@ -16,7 +16,7 @@
     },
     "devDependencies": {
         "@dice-sh/eslint-config": "^1.0.0",
-        "eslint": "^9.6.0",
+        "eslint": "^9.7.0",
         "prettier": "^3.3.2",
         "socket.io-client": "^4.7.5",
         "ts-node": "^10.9.2",
