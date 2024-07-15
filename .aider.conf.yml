@@ -1,0 +1,4 @@
+lint-cmd: "npm run prettify lint"
+test-cmd: "npm run test"
+auto-lint: true
+auto-test: true
