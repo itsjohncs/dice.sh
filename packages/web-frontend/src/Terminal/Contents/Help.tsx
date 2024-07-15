@@ -1,6 +1,6 @@
 /* eslint react/no-unescaped-entities: off */
 
-import { MagicWand} from "iconoir-react";
+import {MagicWand} from "iconoir-react";
 import AnimatedLogo from "./AnimatedLogo";
 
 import styles from "./Help.module.css";

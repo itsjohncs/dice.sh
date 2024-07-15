@@ -77,7 +77,7 @@ interface ChannelTerminalProps {
 
 export default function ChannelTerminal({channelId}: ChannelTerminalProps) {
     const [history, appendHistory] = usePromptHistory();
-    const {isConnected, append, entries} = useChannelConnection(channelId);
+    const {append, entries} = useChannelConnection(channelId);
 
     // This lets us hydrate correctly despite our use of browser storage
     const [loading, setLoading] = useState(true);
