@@ -6,6 +6,7 @@ import {roll, RollLogEntry, ClientSocket, LogEntry} from "@dice-sh/engine";
 import {useLocalStorage, useSessionStorage} from "usehooks-ts";
 import usePromptHistory from "#root/usePromptHistory";
 import {io} from "socket.io-client";
+import {useParams} from "next/navigation";
 
 function useSocket(): ClientSocket {
     const ref = useRef<ClientSocket>();
@@ -15,7 +16,7 @@ function useSocket(): ClientSocket {
     return ref.current;
 }
 
-function useChannelConnection() {
+function useChannelConnection(channelId: string) {
     const socket = useSocket();
 
     const [isConnected, setIsConnected] = useState(false);
@@ -28,7 +29,7 @@ function useChannelConnection() {
 
             if (!socket.recovered) {
                 socket.emitWithAck("initialize", {
-                    channelId: "testchannel",
+                    channelId,
                     clientVersion: "test-1",
                     username: "testuser",
                     lastSeenLog: undefined,
@@ -72,9 +73,13 @@ function useChannelConnection() {
     };
 }
 
-export default function ChannelTerminal() {
+interface ChannelTerminalProps {
+    channelId: string;
+}
+
+export default function ChannelTerminal({channelId}: ChannelTerminalProps) {
     const [history, appendHistory] = usePromptHistory();
-    const {isConnected, append, entries} = useChannelConnection();
+    const {isConnected, append, entries} = useChannelConnection(channelId);
 
     // This lets us hydrate correctly despite our use of browser storage
     const [loading, setLoading] = useState(true);
