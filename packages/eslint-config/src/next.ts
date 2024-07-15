@@ -1,12 +1,17 @@
-import {Linter} from "eslint";
-import {fixupConfigRules} from "@eslint/compat";
-
-import node from "@vercel/style-guide/eslint/node";
-import typescript from "@vercel/style-guide/eslint/typescript";
-import browser from "@vercel/style-guide/eslint/browser";
-import react from "@vercel/style-guide/eslint/react";
-import next from "@vercel/style-guide/eslint/next";
+import base from "./base";
+import reactRecommended from "eslint-plugin-react/configs/recommended";
 
 export default [
-    ...fixupConfigRules([node, typescript, browser, react, next]),
-] satisfies Linter.FlatConfig[];
+    ...base,
+    {
+        ignores: [".next", "eslint.config.js"],
+    },
+    {
+        files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
+        plugins: reactRecommended.plugins,
+        rules: {
+            ...reactRecommended.rules,
+            "react/react-in-jsx-scope": "off",
+        },
+    },
+];
