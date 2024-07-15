@@ -1,8 +1,7 @@
 "use client";
 
-import {KeyboardEvent, useCallback, useRef, useState} from "react";
+import {KeyboardEvent, useCallback} from "react";
 
-import useDocumentListener from "#root/utils/useDocumentListener";
 import EditableArea from "./EditableArea";
 import useHistory from "./useHistory";
 

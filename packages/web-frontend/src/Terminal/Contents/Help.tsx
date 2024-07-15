@@ -1,10 +1,9 @@
 /* eslint react/no-unescaped-entities: off */
 
-import {Hat, MagicWand, QuoteMessageSolid} from "iconoir-react";
+import { MagicWand} from "iconoir-react";
 import AnimatedLogo from "./AnimatedLogo";
 
 import styles from "./Help.module.css";
-import Image from "next/image";
 
 export default function Help() {
     return (

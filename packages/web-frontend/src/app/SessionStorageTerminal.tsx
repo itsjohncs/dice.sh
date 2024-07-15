@@ -3,7 +3,7 @@
 import {useCallback, useEffect, useState} from "react";
 import Terminal from "#root/Terminal";
 import {roll, RollLogEntry} from "@dice-sh/engine";
-import {useLocalStorage, useSessionStorage} from "usehooks-ts";
+import { useSessionStorage} from "usehooks-ts";
 import usePromptHistory from "#root/usePromptHistory";
 
 const prompt = "$ ";

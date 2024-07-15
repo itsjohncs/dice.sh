@@ -1,12 +1,10 @@
 "use client";
 
-import {useCallback, useEffect, useReducer, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import Terminal from "#root/Terminal";
 import {roll, RollLogEntry, ClientSocket, LogEntry} from "@dice-sh/engine";
-import {useLocalStorage, useSessionStorage} from "usehooks-ts";
 import usePromptHistory from "#root/usePromptHistory";
 import {io} from "socket.io-client";
-import {useParams} from "next/navigation";
 
 function useSocket(): ClientSocket {
     const ref = useRef<ClientSocket>();
