@@ -1,21 +1,16 @@
 # dice.sh
 
-A simple online console-like dice roller available at [https://dice.sh](https://dice.sh).
+A simple online console-like dice roller that will eventually be available at [https://dice.sh](https://dice.sh).
 
-## Roadmap
+## Planned feature set
 
-I've created a quick MVP to see if I end up liking using this. Here's some other things I thought could be useful:
+* Networked rooms so you can share rolls.
+* A CLI you can pull off of `npm`.
+* Ability to `ssh dice.sh` and get the CLI interface.
+* Ability to `telnet dice.sh` and get the CLI interface.
 
-* `Ctrl+R` to do a fuzzy history search.
-* Save all prompts to local storage so they're searchable.
-    * *Some details:* Currently the history is just what's on the screen and it's stored in session storage. But I want there to be an additional log of just the user's inputs in local storage that can be searched through.
-* Add a server backend to allow saving history there and hosting shared sessions.
-* Create alternate interfaces:
-    * An actual command line version you can run locally, similar to my [die-sim](https://github.com/itsjohncs/die-sim).
-    * Allow connecting via telnet.
-    * Allow connecting via ssh.
-* Allow choosing color scheme and font.
+## Why this is getting made
 
-If you're interested in working on any of this please reach out! You can find me on [Twitter](https://x.com/itsjohncs), [Mastodon](https://tech.lgbt/@johncs), or even [Shmeppy's Discord](https://discord.gg/Q246DD5).
+The short story: because `dice.sh` is too good of a domain name to not build this onto.
 
-The repository and codebase could also use some love to transform it from a two-day hack to something to be built upon.
+The longer story: when looking at dice-related domains for an unrelated project, [domaintyper](https://domaintyper.com) told me `dice.sh` was available for purchase. After building a quick prototype I found out that it actually was not, so I launched the prototype to [diceroller.sh](https://diceroller.sh) and moved on. A couple days later I started wondering _why_ Domain Typer was confused and looked into the `whois` entries for `dice.sh` and found out that it was expiring. A couple weeks of daily querying later and I owned `dice.sh` and the project was back on!
